@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+  <head>
+
+    <title>Rybook</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Bootstrap -->
+    <link href= "{{url_for('static', filename = 'css/bootstrap/css/bootstrap.min.css')}}" rel="stylesheet" media="screen">
+
+  </head>
+    <script src="http://code.jquery.com/jquery.js"></script>
+    <script src="{{url_for('static', filename = 'css/bootstrap/js/bootstrap.min.js')}}"></script>
+
+<body>
+  <style type="text/css">
+    #accept{
+      margin-top: -25px;
+    }
+  </style>
+<div class="navbar">
+  <div class="navbar-inner">
+    <div class="container">
+       <a class="brand" href="#">Rybook</a>
+
+      <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+      <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </a>
+      <!-- Be sure to leave the brand out there if you want it shown -->
+      <!-- Everything you want hidden at 940px or less, place within here -->
+      <div class="nav-collapse collapse navbar-responsive-collapse">
+        <ul class = "nav pull-left">
+          <form class="navbar-search pull-left" action="">
+            <i class="icon-search"></i>
+            <input type="text" class="search-query span7" placeholder="Search">
+          </form>
+          <li class>
+            <a href=></a>
+          </li>
+          <li class>
+            <a href=></a>
+          </li>
+         <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class = "icon-user"></i> <b class="caret"></b></a>
+            <ul class=  "dropdown-menu"> 
+              <li class = "nav-header"> Requests </li>
+              <li class = "divider"></li>
+              <li>
+                <span class = 'pull-left'>Person</span>
+                <a href="#"> 
+                <div class="btn-group pull-right" id = 'accept'>
+
+                  <button class="btn btn-mini">Decline</button></a>
+                  <a href = '#'><button class="btn btn-mini btn-primary">Accept</button>
+                </div>
+                </a>
+             </li>
+            </ul>
+          </li>
+          <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class = "icon-edit"></i> <b class="caret"></b></a>
+            <ul class=  "dropdown-menu"> 
+              <li class = "nav-header"> Messages </li>
+              <li class = "divider"></li>
+              <li><a href="#"><i class="icon-user"></i> Person</a></li>
+            </ul>
+          </li>
+        </ul>
+  
+        <ul class = "nav pull-right">
+          <li class="active">
+            <a href="#"><i class="icon-home"></i> Home</a>
+          </li>
+<!--           <li>
+            <a href="#"> Profile</a>
+          </li> -->
+          <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class = "icon-wrench"></i> <b class="caret"></b></a>
+            <ul class=  "dropdown-menu"> 
+              <li class = "nav-header"> Settings </li>
+              <li class = "divider"></li>
+              <li><a href="#"><i class="icon-pencil"></i> Edit</a></li>
+              <li><a href="#"><i class="icon-trash"></i> Delete</a></li>
+              <li><a href="#"><i class="icon-ban-circle"></i> Ban</a></li>
+              <!-- Add persons picture to icons and then make that what appears for a friend request -->
+            </ul>
+          </li>
+
+        <!-- .nav, .navbar-search, .navbar-form, etc -->
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container-fluid">
+  <div class="row-fluid">
+    <div class="span2">
+      <span> Email: {{current_user.email}} <br>
+             Id: {{current_user.id}} <br>
+             Dob: {{current_user.birthday}} <br>
+             Password: {{current_user.password}} <br>
+             Name: {{current_user.f_Name}} {{current_user.l_Name}}
+        <br>
+<!--              Password: {{email}}
+ -->  </span>
+
+
+
+    </div>
+    <div class="span10" pull-right>
+      <div class = 'edit'>
+        <form action = "{{url_for('fixedProfile', user_id = current_user.id)}}" method = 'post'/>
+          <span>
+            Email: <input name = 'email' id="focusedInput" type="text"  value ="{{current_user.email}}"/>
+            <br>
+            Dob: <input name = 'birthday' type="text" value="{{current_user.birthday}}"/>
+            <br>
+            Password: <input name = 'password' id="focusedInput" type="text" value="{{current_user.password}}"/>
+            <br>
+            First Name: <input name = 'f_Name'id="focusedInput" type="text" value="{{current_user.f_Name}}"/>
+            <br>
+            Last Name: <input name = 'l_Name' id="focusedInput" type="text" value="{{current_user.l_Name}}"/>
+          </span>
+          <button type = 'submit'> Submit </button>
+        </form> 
+
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+</body>
+</html>

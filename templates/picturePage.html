@@ -1,0 +1,12 @@
+<html>
+	<img class = "thumb" src = {{url_for('static', filename = 'images/' + pic_info.filename)}}/>
+
+	<form action = "{{url_for('comment', item_id = pic_info.id)}}" method = 'post'>
+		<input type="text" name = 'comment' class="search-query span2" placeholder="Comment"> </input>
+		<input type = "hidden" name = "type" value = 'picture'> </input>
+	</form>
+	{% for c in comments %}
+		{{c.comment}}
+		<br>
+	{% endfor %}
+</html>

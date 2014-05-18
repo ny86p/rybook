@@ -1,0 +1,83 @@
+<html>
+	<head>	
+		<title> Rybook | Registration </title>
+		    <link href="{{ url_for('static', filename='css/reg-styles.css') }}" rel="stylesheet" type="text/css" />
+	</head>
+		<body>
+			<div class = "header">
+				<h1> User Registration </h1>
+			<div class="login-form">
+      <form action="{{ url_for('submit_registration') }}" method="post">
+        <div class="email">
+          <span>Email:</span>
+          <input class="login-input" name = "email"/>
+        </div>
+        <div class="password">
+          <span>Password:</span>
+          <input class="login-input" type="password" name = "password"/>
+        </div>
+        <!-- For Loop Here through List??? -->
+        <div class="general">
+        	<span>First Name: </span>
+        	<input class = "login-input" name = "f_Name"/>
+        </div>
+        <div class="general">
+          <span>Last Name: </span>
+          <input class = "login-input" name = "l_Name"/>
+        </div>
+<!--         <div class="general">
+          <span>City Name: </span>
+          <input class = "login-input" name = "cityName"/>
+        </div>
+        <div class="general">
+          <span>State: </span>
+          <input class = "login-input" name = "state"/>
+        </div>
+        <div class="general">
+          <span>Gender: </span>
+          <input class = "login-input" name = "gender"/>
+        </div> -->
+        <div class="general">
+          <span>DoB: </span>
+          <select>
+            <row>
+              <option>1</option>
+              <option>2</option>
+              <option>3</option>
+              <option>4</option>
+              <option>5</option>
+            </row>
+          </select>  
+          /
+          <select>
+            <row>
+              <option>1</option>
+              <option>2</option>
+              <option>3</option>
+              <option>4</option>
+              <option>5</option>
+            </row>
+          </select>  
+          /
+          <select>
+            <row>
+              <option>1</option>
+              <option>2</option>
+              <option>3</option>
+              <option>4</option>
+              <option>5</option>
+            </row>
+          </select> 
+        </div>
+<!--         <div class="general">
+          <span>Brief Bio: </span>
+          <textarea rows="3"></textarea>        
+        </div> -->
+        <div class="buttons">
+          <button type="submit">Register</button>
+          <button type="submit">Cancel</button>
+        </div>
+      </form>
+    </div>
+	</body>
+</html>
