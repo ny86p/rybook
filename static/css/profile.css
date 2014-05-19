@@ -8,29 +8,3 @@
     border: 1px solid black; }
   .content .friends {
     border: 1px solid black; }
-  .content .pictures{
-    border: 1px solid black; 
-  }
-  .content .info .propic{
-  	height: 60%;
-  	width: 50%%;
-  	float: left;
-  }
-  .content .info .propic .photopropic{
-  	height: 8%;
-  	width: 40%;
-  }
-  .content .info .person-info{
-  	float: left;
-  	width: 50%;
-  }
-  .content .info .upload-buttons{
-  	float: left;	
-  	height: 60%;
-  	width: 50%
-  }
-  .content .info .edit-buttons{
-  	float: left;	
-  	height: 40%;
-  	width: 50%
-  }
