@@ -1,0 +1,133 @@
+$hover-pink: #F36A97;
+$dark-pink: #ED145B;
+$light-gray: #D6D6D6;
+
+.header {
+	// height: 10%;
+	width: 100%;
+	background-color: black;
+	h1{
+		margin: 0;
+	}
+	.left{
+		width: 65%;
+		color: white;
+		padding: 15px;
+		border: 1px solid yellow;
+		display: inline-block;
+		.site-name{
+			font-weight: bold;
+			font-size: 25px;
+		}
+		.pro-pic{
+			margin-left: 189px;
+			margin-top: -30px;		
+		}
+	}
+	.right{
+		width: 32%;
+		border: 1px solid red;
+		display: inline-block;
+		color: white; 
+	}
+}
+
+.navbar{
+	width: 80%;
+	margin: 0 auto;
+	display: block;
+	height: 7%;
+	background: $dark-pink;
+	border: none;
+	ul.nav{
+		text-align: center;
+		float: none;
+		width: 60%;	
+		margin: 0 auto;
+	
+		li {
+			margin-right: 10px;
+			display: inline-block;
+			float: none;
+			// &:hover{
+			// 	background: #F36A97;
+			// }
+			&.open{
+				a.dropdown-toggle{
+					background:  $hover-pink;
+					color: white;
+				}
+			}
+
+			a{
+				display: inline-block;
+				margin-top: 11px;
+				font-size: 16px;
+				color: white;
+				text-transform: uppercase;
+				padding: 10px;
+				&:focus{
+					color: white;
+				}
+				&:hover{
+					color: white;
+					background: $hover-pink;
+				}
+			}		
+		}
+		ul.dropdown-menu{
+			text-align: left;
+			li{
+				width: 100%;
+				margin-top: 0;
+				a{
+					width: 100%;
+					color: black;
+					text-transform: none;
+					&:hover{
+						background: $light-gray;
+					}
+				}
+
+			}
+		}
+	}
+}
+
+.content{
+	width: 100%;
+	height: 50%;
+	.left{
+		border: 1px solid red;
+		width: 48%;
+		height: 100%;
+		float: left;
+		.statuses{
+			width: 50%;
+			border: 1px solid green;
+			text-align: center;
+			height: 70%;
+			margin-right: auto;
+			margin-left: auto;
+		}
+	}
+
+	.right{
+		border: 1px solid blue;
+		width: 49%;
+		height: 100%;
+		float: right;
+		.pictures{
+			width: 50%;
+			float: right;
+			height: 60%;
+			border: 1px solid black;
+		}
+		.bio{
+			width: 48%;
+			float: left;
+			height: 50%;
+			border: 1px solid orange;
+		}
+	}
+}
