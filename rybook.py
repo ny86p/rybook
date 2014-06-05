@@ -21,9 +21,9 @@ app.config['ALLOWED_EXTENSIONS'] = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif
 def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1] in  app.config['ALLOWED_EXTENSIONS']
-@app.route('/dumb')
-def dumb():
-	return render_template("example.html")
+@app.route('/redesign')
+def redesign():
+	return render_template("redesign.html")
 
 @app.route('/')
 def index():
