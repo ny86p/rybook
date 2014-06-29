@@ -21,9 +21,26 @@ app.config['ALLOWED_EXTENSIONS'] = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif
 def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1] in  app.config['ALLOWED_EXTENSIONS']
-@app.route('/redesign')
-def redesign():
-	return render_template("redesign.html")
+
+@app.route('/redesign/<user_id>')
+def redesign(user_id):
+	viewer = Person.select().where(Person.id == session['id']).get()
+	# Grab current_users info
+	# current_user = page owner, 
+	current_user = Person.select().where(Person.id == user_id).get()
+	# check if the person viewing page is the owner
+	current_user.owner = str(user_id) == str(session['id'])
+
+	request_names = getPendingRequests(user_id)
+	print"Requests: ", request_names
+	try:
+		Message.select().order_by(Message.id.desc())
+		message = [m for m in Message.select().where(Message.recipient_id == user_id)]
+
+	except:
+		message = []
+
+	return render_template("profile2.html",current_user = current_user, request_names = request_names, viewer = viewer, message = message)
 
 @app.route('/')
 def index():
@@ -35,7 +52,7 @@ def login():
 	current_user = Person.get(Person.email == request.form['email'], Person.password == request.form['password'])
 		# return current_user.email
 	session['id'] = current_user.id
-	return redirect(url_for("profile", user_id = current_user.id))
+	return redirect(url_for("redesign", user_id = current_user.id))
 	# except:
 	# 	return render_template("index.html")
 		# current_user.active == True
@@ -63,7 +80,7 @@ def submit_registration():
 
 @app.route('/home')
 def home():
-	return redirect(url_for('profile', user_id = session['id']))
+	return redirect(url_for('redesign', user_id = session['id']))
 
 @app.route('/profile/<user_id>')
 def profile(user_id):
@@ -116,7 +133,6 @@ def profile(user_id):
 
 
 	return render_template('profile.html', current_user = current_user, request_names = request_names, friends = friends, logged_in = int(session['id']),status = status, message = message, likers = likers)
-
 
 @app.route('/editProfile/<user_id>')
 def editProfile(user_id):

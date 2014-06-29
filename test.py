@@ -6,9 +6,9 @@ from statuses import *
 from messages import *
 from likes import *
 from comments import *
-from likes2 import *
 from picture import *
 
+Friendship.create_table()
 # Picture.create_table()
 
 # for r in Likes.select().join(Person).where(Likes.user_id == Person.id):

@@ -1,0 +1,79 @@
+html
+	head
+    		link href="{{url_for('static', filename = 'css/bootstrap/dist/css/bootstrap.css')}}" rel="stylesheet" media="screen"
+    		link href="{{url_for('static', filename = 'css/base2.css')}}" rel="stylesheet" media="screen"
+    		script src="{{url_for('static', filename = 'js/jquery-1.11.1.min.js')}} "
+    		script src="{{url_for('static', filename = 'css/bootstrap/dist/js/bootstrap.js')}} "
+	body
+		.header
+			.left
+				.site_header
+					span.site-name Rybook 
+					br
+					span Welcome {{viewer.f_Name}} {{viewer.l_Name}}
+			.right
+				form role="search" method="post"
+				      div class="form-group"
+			        		input type="text" name='Search' class="form-control" placeholder="Search..."
+
+		nav.navbar.navbar-default role="navigation" 
+			.container-fluid
+				.collapse.navbar-collapse
+					ul.nav.navbar-nav
+						li.home
+							a href="{{url_for('home')}}" 
+								img src="{{url_for('static', filename = 'images/' + current_user.profile_photo)}}" class='profile_photo'
+								| {{viewer.f_Name}}
+
+						| {% if current_user.owner %}
+						li.dropdown
+							a.dropdown-toggle data-toggle="dropdown" href="#" 
+								| Requests
+							ul.dropdown-menu 
+								| {% if not request_names.length%}
+									No Current Requests
+								| {%endif%}
+								| {% for name in request_names %}
+								li
+									span {{name}}
+									form action="{{url_for('acceptRequest', friend = name)}}" method="post"
+										button.btn.btn-default.btn-sm type="submit" Accept
+									form action="{{url_for('declineRequest', friend = name)}}" method="post"
+										button.btn.btn-default.btn-sm type="submit" Decline
+			      				li.divider
+			      				| {%endfor%}
+			      		| {%endif%}
+						
+						| {% if current_user.owner %}
+						li.dropdown
+							a.dropdown-toggle data-toggle="dropdown" href="#" 
+								| Messages
+							ul.dropdown-menu
+								| {% if not message.length%}
+									No Current Messages
+								| {%endif%}
+								| {% for m in message%}
+								li
+									span.pull-left {{m.message}}
+									br
+									span Sent from id# -  {{m.sender_id}}
+								li.divider
+		     						| {%endfor%}
+						| {%endif%}
+
+						li.dropdown
+							a.dropdown-toggle data-toggle="dropdown" href="#" 
+    								| Dropdown
+							ul.dropdown-menu
+							  li
+							    a href="#"  Action
+							  li
+							    a href="#"  Another action
+							  li
+							    a href="{{url_for('logout')}}"  Log Out
+
+		.content			
+			| {% block content %}
+			| {% endblock %}
+
+

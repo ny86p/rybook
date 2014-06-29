@@ -1,0 +1,31 @@
+.left{
+	border: 1px solid red;
+	width: 48%;
+	height: 100%;
+	float: left;
+	.statuses{
+		width: 50%;
+		border: 1px solid green;
+		text-align: center;
+		height: 70%;
+		margin-right: auto;
+		margin-left: auto;
+	}
+}
+
+.right{
+	border: 1px solid blue;
+	width: 49%;
+	height: 100%;
+	float: right;
+	.pictures{
+		width: 50%;
+		height: 60%;
+		border: 1px solid black;
+	}
+	.bio{
+		width: 48%;
+		height: 40%;
+		border: 1px solid orange;
+	}
+}

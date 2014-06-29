@@ -6,17 +6,13 @@ from statuses import *
 from datetime import datetime
 
 def getPendingRequests(user_id):
-	request_names =  []
 	try:
+		# find all pending request for current user
 		pending_requests = Friendship.select().where((Friendship.user_id == user_id) & (Friendship.accepted == 0)).get()
-		person = Person.get(Person.id == pending_requests.friend_user_id)
-		for request in pending_requests.select():
-			if person.f_Name not in request_names:
-				if request.accepted != 0:
-					request_names.append(person.f_Name)
-		return request_names
+		#for each request, get info of requester
+		return [Person.get(request.friend_user_id == Person.id).f_Name for request in pending_requests.select()]
 	except:
-		return request_names
+		return []
 
 def getStatuses(user_id):
 	status = []

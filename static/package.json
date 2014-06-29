@@ -1,0 +1,15 @@
+{
+  "author": "",
+  "name": "",
+  "description": "",
+  "version": "",
+  "repository": {
+    "url": ""
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "ya.js": "*"
+  },
+  "main": "",
+  "license": ""
+}
