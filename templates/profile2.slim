@@ -1,13 +1,32 @@
 | {% extends "base2.html" %}
 | {% block content %}
 .left
-	.statuses
-		| Status
-.right
 	.bio
-		| Info
+		| Name: {{current_user.f_Name}} {{current_user.l_Name}}
+		br
+		| Email: {{current_user.email}}
 	.pictures
-		| Picture
-
+		|Pictures
+		.img
+			a href="{{url_for('getPictures', user_id=current_user.id)}}"
+				img src="{{url_for('static', filename = 'images/' + current_user.profile_photo)}}" class='prophoto'
+.right
+	|{%for s in status%}
+	.statuses
+		.status
+			.top
+				.leftpart
+					img src="{{url_for('static', filename = 'images/' + current_user.profile_photo)}}" class='thumb'
+				.rightpart
+					.creater
+						|{{current_user.f_Name}} {{current_user.l_Name}}	
+						| {%if s.date_created %}		
+							| on {{s.date_created}}
+						| {%endif%}
+					.middle
+						| {{s.status}}	
+			.bottom
+				| Like and comment bar	
+	|{%endfor%}
 
 | {% endblock %}

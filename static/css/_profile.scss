@@ -1,31 +1,79 @@
-.left{
-	border: 1px solid red;
-	width: 48%;
-	height: 100%;
-	float: left;
-	.statuses{
-		width: 50%;
-		border: 1px solid green;
-		text-align: center;
-		height: 70%;
-		margin-right: auto;
-		margin-left: auto;
-	}
-}
-
-.right{
-	border: 1px solid blue;
-	width: 49%;
-	height: 100%;
-	float: right;
-	.pictures{
-		width: 50%;
-		height: 60%;
-		border: 1px solid black;
-	}
-	.bio{
+.content{
+	.right{
 		width: 48%;
-		height: 40%;
-		border: 1px solid orange;
+		float: right;
+		.statuses{
+			text-align: center;
+			margin-right: auto;
+			margin-left: auto;
+			margin-bottom: 15px;
+			.status{
+				margin: 0 auto;
+				float: left;
+				width: 100%;
+				margin-bottom: 25px;
+				border: 1px solid black;
+				.top{
+					float: left;
+					width: 100%;
+					.leftpart{
+						width: 20%;
+						float: left;
+						.thumb{
+							height: 68px; 
+						}
+					}
+					.rightpart{
+						width: 80%;
+						float: left;
+						.creater{
+							width: 100%;
+
+							font-size: 18px;
+							text-align: left;
+						}
+						.middle{
+							width: 100%;
+							float: left;
+							text-align: left;
+							font-size: 18px;
+						}		
+					}
+				}
+				.bottom{
+						width: 100%;
+						float: left;
+					}
+			}
+		}
+	}
+
+	.left{
+		border: 1px solid blue;
+		width: 49%;
+		float: left;
+		.reg-info{
+			margin-left: 40px; 
+		}
+		.pictures{
+			width: 50%;
+
+			border: 1px solid black;
+			.img{
+				width: 50%;
+
+				.prophoto{
+					width: 100%;
+				}
+			}
+		}
+		.bio{
+			width: 48%;
+
+			border: 1px solid orange;
+		}
+		#reg{
+			width: 50%;
+		}
 	}
 }

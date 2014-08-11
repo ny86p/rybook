@@ -1,6 +1,6 @@
 from peewee import *
 
-db = SqliteDatabase('friendship.db')
+# db = SqliteDatabase('friendship.db')
 class Friendship(Model):
 	user_id = IntegerField()
 	friend_user_id = IntegerField()

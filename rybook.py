@@ -31,8 +31,11 @@ def redesign(user_id):
 	# check if the person viewing page is the owner
 	current_user.owner = str(user_id) == str(session['id'])
 
+	status= getStatuses(user_id)
+
 	request_names = getPendingRequests(user_id)
 	print"Requests: ", request_names
+
 	try:
 		Message.select().order_by(Message.id.desc())
 		message = [m for m in Message.select().where(Message.recipient_id == user_id)]
@@ -40,11 +43,11 @@ def redesign(user_id):
 	except:
 		message = []
 
-	return render_template("profile2.html",current_user = current_user, request_names = request_names, viewer = viewer, message = message)
+	return render_template("profile2.html",current_user = current_user, request_names = request_names, viewer = viewer, message = message, status = status)
 
 @app.route('/')
 def index():
-	return render_template("index.html")
+	return render_template("index2.html")
 
 @app.route('/login', methods = ['POST'])
 def login():
@@ -66,7 +69,6 @@ def register():
 @app.route('/submit_registration', methods = ['POST'])
 def submit_registration():
 # check that no other user has same username/email
-	db = SqliteDatabase('people.db')
 	person = Person()
 	# person.email = request.form['email']
 	# person.password = request.form['password']
@@ -101,6 +103,7 @@ def profile(user_id):
 				likers.append(person.f_Name)
 				s.likers = likers
 				s.likes = likes.count()
+				print 'in'
 
 		except:
 			print "No Likes"
@@ -183,7 +186,7 @@ def search():
 	if request.form['Search'] in names:
 		try:
 			person = Person.get(Person.f_Name == request.form['Search'])
-			return redirect(url_for('profile', user_id = person.id))
+			return redirect(url_for('redesign', user_id = person.id))
 		except:
 			return redirect(request.referrer)
 	else:

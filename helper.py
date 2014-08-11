@@ -46,3 +46,16 @@ def getAcceptedFrienships(user_id):
 def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
+
+def getLikes(status):
+	for s in status:
+		try:
+			likes = Likes.select().where(Likes.item_id == s.id)
+			for like in likes:
+				person = Person.select().where(Person.id == like.user_id).get()
+				likers.append(person.f_Name)
+				s.likers = likers
+				s.likes = likes.count()
+				return ':)'
+		except:
+			return ':('

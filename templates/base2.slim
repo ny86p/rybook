@@ -10,19 +10,22 @@ html
 				.site_header
 					span.site-name Rybook 
 					br
-					span Welcome {{viewer.f_Name}} {{viewer.l_Name}}
+					| {%if viewer%}
+					span  {{viewer.f_Name}} {{viewer.l_Name}}
+					| {%endif%}
 			.right
-				form role="search" method="post"
+				form role="search" action="{{url_for('search')}}" method="post" 
 				      div class="form-group"
 			        		input type="text" name='Search' class="form-control" placeholder="Search..."
 
+		| {%if viewer%}
 		nav.navbar.navbar-default role="navigation" 
 			.container-fluid
 				.collapse.navbar-collapse
 					ul.nav.navbar-nav
 						li.home
 							a href="{{url_for('home')}}" 
-								img src="{{url_for('static', filename = 'images/' + current_user.profile_photo)}}" class='profile_photo'
+								img src="{{url_for('static', filename = 'images/' + viewer.profile_photo)}}" class='profile_photo'
 								| {{viewer.f_Name}}
 
 						| {% if current_user.owner %}
@@ -61,6 +64,7 @@ html
 		     						| {%endfor%}
 						| {%endif%}
 
+
 						li.dropdown
 							a.dropdown-toggle data-toggle="dropdown" href="#" 
     								| Dropdown
@@ -71,7 +75,7 @@ html
 							    a href="#"  Another action
 							  li
 							    a href="{{url_for('logout')}}"  Log Out
-
+		| {%endif%}
 		.content			
 			| {% block content %}
 			| {% endblock %}

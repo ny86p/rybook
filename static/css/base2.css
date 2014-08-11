@@ -81,34 +81,63 @@
           .navbar ul.nav ul.dropdown-menu li a:hover {
             background: #d6d6d6; }
 
-.left {
-  border: 1px solid red;
+.content .right {
   width: 48%;
-  height: 100%;
-  float: left; }
-  .left .statuses {
-    width: 50%;
-    border: 1px solid green;
+  float: right; }
+  .content .right .statuses {
     text-align: center;
-    height: 70%;
     margin-right: auto;
-    margin-left: auto; }
-
-.right {
+    margin-left: auto;
+    margin-bottom: 15px; }
+    .content .right .statuses .status {
+      margin: 0 auto;
+      float: left;
+      width: 100%;
+      margin-bottom: 25px;
+      border: 1px solid black; }
+      .content .right .statuses .status .top {
+        float: left;
+        width: 100%; }
+        .content .right .statuses .status .top .leftpart {
+          width: 20%;
+          float: left; }
+          .content .right .statuses .status .top .leftpart .thumb {
+            height: 68px; }
+        .content .right .statuses .status .top .rightpart {
+          width: 80%;
+          float: left; }
+          .content .right .statuses .status .top .rightpart .creater {
+            width: 100%;
+            font-size: 18px;
+            text-align: left; }
+          .content .right .statuses .status .top .rightpart .middle {
+            width: 100%;
+            float: left;
+            text-align: left;
+            font-size: 18px; }
+      .content .right .statuses .status .bottom {
+        width: 100%;
+        float: left; }
+.content .left {
   border: 1px solid blue;
   width: 49%;
-  height: 100%;
-  float: right; }
-  .right .pictures {
+  float: left; }
+  .content .left .reg-info {
+    margin-left: 40px; }
+  .content .left .pictures {
     width: 50%;
-    height: 60%;
     border: 1px solid black; }
-  .right .bio {
+    .content .left .pictures .img {
+      width: 50%; }
+      .content .left .pictures .img .prophoto {
+        width: 100%; }
+  .content .left .bio {
     width: 48%;
-    height: 40%;
     border: 1px solid orange; }
+  .content .left #reg {
+    width: 50%; }
 
 .content {
-  width: 100%;
-  height: 50%;
-  padding: 20px 50px; }
+  width: 80%;
+  padding: 20px 50px;
+  margin: 0 auto; }
