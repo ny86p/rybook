@@ -84,6 +84,9 @@
 .content .right {
   width: 48%;
   float: right; }
+  .content .right .input-group {
+    width: 50%;
+    margin-left: 22%; }
   .content .right .statuses {
     text-align: center;
     margin-right: auto;
@@ -97,15 +100,20 @@
       border: 1px solid black; }
       .content .right .statuses .status .top {
         float: left;
-        width: 100%; }
+        width: 100%;
+        background: white; }
         .content .right .statuses .status .top .leftpart {
           width: 20%;
           float: left; }
           .content .right .statuses .status .top .leftpart .thumb {
-            height: 68px; }
+            height: 68px;
+            width: 80%;
+            float: left; }
         .content .right .statuses .status .top .rightpart {
           width: 80%;
-          float: left; }
+          float: left;
+          padding-left: 10px;
+          padding-top: 7px; }
           .content .right .statuses .status .top .rightpart .creater {
             width: 100%;
             font-size: 18px;
@@ -117,7 +125,9 @@
             font-size: 18px; }
       .content .right .statuses .status .bottom {
         width: 100%;
-        float: left; }
+        float: left;
+        color: white;
+        background: black; }
 .content .left {
   border: 1px solid blue;
   width: 49%;
@@ -136,6 +146,9 @@
     border: 1px solid orange; }
   .content .left #reg {
     width: 50%; }
+
+body {
+  background: #6E6E78; }
 
 .content {
   width: 80%;

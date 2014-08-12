@@ -2,6 +2,10 @@
 	.right{
 		width: 48%;
 		float: right;
+		.input-group{
+			width: 50%;
+			margin-left: 22%;
+		}
 		.statuses{
 			text-align: center;
 			margin-right: auto;
@@ -16,16 +20,21 @@
 				.top{
 					float: left;
 					width: 100%;
+					background: white;
 					.leftpart{
 						width: 20%;
 						float: left;
 						.thumb{
 							height: 68px; 
+							width: 80%;
+							float: left;
 						}
 					}
 					.rightpart{
 						width: 80%;
 						float: left;
+						padding-left: 10px;
+						padding-top: 7px;
 						.creater{
 							width: 100%;
 
@@ -43,6 +52,8 @@
 				.bottom{
 						width: 100%;
 						float: left;
+						color: white;
+						background: black;
 					}
 			}
 		}

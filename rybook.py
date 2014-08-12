@@ -32,6 +32,9 @@ def redesign(user_id):
 	current_user.owner = str(user_id) == str(session['id'])
 
 	status= getStatuses(user_id)
+	for s in status:
+		if s.date_created:
+			s.date_created = datetime.strftime(s.date_created, '%m/%d/%Y %I:%M%p')
 
 	request_names = getPendingRequests(user_id)
 	print"Requests: ", request_names

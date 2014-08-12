@@ -14,14 +14,6 @@ def getPendingRequests(user_id):
 	except:
 		return []
 
-def getStatuses(user_id):
-	status = []
-	try:
-		for statuses in Status.select().where(Status.creater_id == user_id):
-			status.append(statuses)
-		return status
-	except:
-		return 'not'
 
 def getReqFriendships(user_id):
 	friends = []
