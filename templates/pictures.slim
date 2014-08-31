@@ -1,0 +1,12 @@
+| {% extends "base2.html" %}
+| {% block content %}
+h1
+	|{{p.f_Name}} {{p.l_Name}}'s photos
+div class="picCollage"
+
+	|{%for pic in pics%}
+	a href="{{url_for('goToPicture', image_name= pic)}}"
+		img src="{{url_for('static', filename = 'images/' + pic)}}" class="userPhoto"
+	|{%endfor%}
+
+| {% endblock %}

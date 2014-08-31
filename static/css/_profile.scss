@@ -35,11 +35,17 @@
 						float: left;
 						padding-left: 10px;
 						padding-top: 7px;
-						.creater{
+						.statusInfo{
 							width: 100%;
 
 							font-size: 18px;
 							text-align: left;
+							.statusOwner{
+								font-size: 15px;
+							}
+							.creationDate{
+								font-size: 11px;
+							}
 						}
 						.middle{
 							width: 100%;
@@ -50,26 +56,82 @@
 					}
 				}
 				.bottom{
-						width: 100%;
-						float: left;
-						color: white;
-						background: black;
+					width: 100%;
+					float: left;
+					color: white;
+					background: #ED145B;
+					text-align: left;
+					.writeComment{
+						float: right;
+						margin: 0 auto;
+						.input-group{
+							float: right;
+							.commentBar{
+							}
+						}
 					}
+
+					.likeStatus{
+						float: left;
+						width: 30%;
+						height: 1%;
+						.likeButton{
+							background: #ED145B;
+							&:hover{
+								text-decoration: underline;
+							}
+						}
+					}
+
+				}
+				
+			
+
+				.commentSection{
+					width: 100%;
+					float: left;
+					background-color: lightpink;
+
+					.comment{
+						height: 42px;
+						border: 1px solid #ED145B;
+						.commentRightSide{
+							float: left;
+							width: 40%;
+							.commentPic{
+								float: left;
+								height: 20px;
+						}
+							.cName{
+								float: left;
+							}
+
+						}
+				 		.commentLeftSide{
+							width: 60%;
+							float: left;
+							.cText{
+								float: left;
+							}
+						}
+
+				}
+
+				}
 			}
 		}
 	}
 
 	.left{
-		border: 1px solid blue;
 		width: 49%;
 		float: left;
+		color: white;
 		.reg-info{
 			margin-left: 40px; 
 		}
 		.pictures{
 			width: 50%;
 
-			border: 1px solid black;
 			.img{
 				width: 50%;
 
@@ -80,8 +142,6 @@
 		}
 		.bio{
 			width: 48%;
-
-			border: 1px solid orange;
 		}
 		#reg{
 			width: 50%;

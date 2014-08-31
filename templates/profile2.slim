@@ -2,10 +2,25 @@
 | {% block content %}
 .left
 	.bio
+
 		| Name: {{current_user.f_Name}} {{current_user.l_Name}}
 		br
 		| Email: {{current_user.email}}
+		br
+		| Friends:
+		|{%if friends%}
+			{%for friend in friends%}
+				{{friend}}
+			{%endfor%}
+		|{%endif%}
+		br
+		| Birthday: {{current_user.bday}}
 	.pictures
+		div class='upload-buttons'
+				form action="{{url_for('upload_file')}}"  method='post' enctype='multipart/form-data'
+					input type='file' name='file'
+					input type='hidden' name='isProfilePhoto' value='1'
+					input type='submit' value='Upload'
 		|Pictures
 		.img
 			a href="{{url_for('getPictures', user_id=current_user.id)}}"
@@ -14,7 +29,7 @@
 	|{%if current_user.owner %}
 	form action="{{url_for('writeStatus')}}" method='post' class='writeStatus'
 		div class="input-group"
-			input type="text" class="form-control"
+			input type="text" class="form-control" name='status'
 			span class="input-group-btn"
 				button class="btn btn-default" type="submit" Post
 
@@ -26,15 +41,33 @@
 				.leftpart
 					img src="{{url_for('static', filename = 'images/' + current_user.profile_photo)}}" class='thumb'
 				.rightpart
-					.creater
-						|{{current_user.f_Name}} {{current_user.l_Name}}	
-						|{%if s.date_created %}		
-							on {{s.date_created}}
-						| {%endif%}
+					.statusInfo
+						span class="statusOwner" {{current_user.f_Name}} {{current_user.l_Name}}	
+						span class="creationDate"  on {{s.date_created}}
 					.middle
-						| {{s.status}}	
+						| {{s.status}} 
 			.bottom
-				| Like and comment bar	
+				form action="{{url_for('likeStatus',s_id = s.id)}}" method='post' class='likeStatus'
+					button class="btn btn-xs likeButton" type="submit" Like
+				
+				| {{s.likes}}
+				span class="glyphicon glyphicon-thumbs-up"
+
+				form action="{{url_for('comment', item_id = s.id)}}" method='post' class="writeComment"
+					div class="input-group"
+						input type="text" name="comment" class="commentBar" placeholder='comment'
+				 		input type="hidden" name="type" value="status"
+	
+			.commentSection 
+					|{%for c in s.comments%}
+					.comment
+						.commentRightSide
+							img src="{{url_for('static', filename = 'images/' + c.commenterPic)}}" class="commentPic"
+							span class="cName" {{c.commenter}}
+						.commentLeftSide
+							span class="cText" {{c.comment}}
+
+					|{%endfor%}
 	|{%endfor%}
 
 | {% endblock %}

@@ -1,7 +1,10 @@
 @import "_header.scss";
 @import "_profile.scss";
+@import "_pictureCollage.scss";
+@import "_picturePage.scss";
+
 body{
-	background: #6E6E78;
+	background-image: url('/static/images/pattern29.png');
 }
 .content{
 	width: 80%;

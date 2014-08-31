@@ -13,7 +13,6 @@ $light-gray: #D6D6D6;
 		width: 65%;
 		color: white;
 		padding: 15px;
-		border: 1px solid yellow;
 		display: inline-block;
 		.site_header{
 			width: 18%;
@@ -22,12 +21,21 @@ $light-gray: #D6D6D6;
 			.site-name{
 				font-weight: bold;
 				font-size: 25px;
+				border-radius: 7px;
+				background: white;
+				padding-left: 7px;
+				color: black;
+				.siteNameLink{
+					color: black;
+					&:hover{
+						text-decoration: none;
+					}
+				}
 			}
 		}
 	}
 	.right{
 		width: 32%;
-		border: 1px solid red;
 		display: inline-block;
 		color: white; 
 		float: right;

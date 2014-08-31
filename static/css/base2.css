@@ -8,7 +8,6 @@
     width: 65%;
     color: white;
     padding: 15px;
-    border: 1px solid yellow;
     display: inline-block; }
     .header .left .site_header {
       width: 18%;
@@ -16,10 +15,17 @@
       float: left; }
       .header .left .site_header .site-name {
         font-weight: bold;
-        font-size: 25px; }
+        font-size: 25px;
+        border-radius: 7px;
+        background: white;
+        padding-left: 7px;
+        color: black; }
+        .header .left .site_header .site-name .siteNameLink {
+          color: black; }
+          .header .left .site_header .site-name .siteNameLink:hover {
+            text-decoration: none; }
   .header .right {
     width: 32%;
-    border: 1px solid red;
     display: inline-block;
     color: white;
     float: right; }
@@ -114,10 +120,14 @@
           float: left;
           padding-left: 10px;
           padding-top: 7px; }
-          .content .right .statuses .status .top .rightpart .creater {
+          .content .right .statuses .status .top .rightpart .statusInfo {
             width: 100%;
             font-size: 18px;
             text-align: left; }
+            .content .right .statuses .status .top .rightpart .statusInfo .statusOwner {
+              font-size: 15px; }
+            .content .right .statuses .status .top .rightpart .statusInfo .creationDate {
+              font-size: 11px; }
           .content .right .statuses .status .top .rightpart .middle {
             width: 100%;
             float: left;
@@ -127,28 +137,82 @@
         width: 100%;
         float: left;
         color: white;
-        background: black; }
+        background: #ED145B;
+        text-align: left; }
+        .content .right .statuses .status .bottom .writeComment {
+          float: right;
+          margin: 0 auto; }
+          .content .right .statuses .status .bottom .writeComment .input-group {
+            float: right; }
+        .content .right .statuses .status .bottom .likeStatus {
+          float: left;
+          width: 30%;
+          height: 1%; }
+          .content .right .statuses .status .bottom .likeStatus .likeButton {
+            background: #ED145B; }
+            .content .right .statuses .status .bottom .likeStatus .likeButton:hover {
+              text-decoration: underline; }
+      .content .right .statuses .status .commentSection {
+        width: 100%;
+        float: left;
+        background-color: lightpink; }
+        .content .right .statuses .status .commentSection .comment {
+          height: 42px;
+          border: 1px solid #ED145B; }
+          .content .right .statuses .status .commentSection .comment .commentRightSide {
+            float: left;
+            width: 40%; }
+            .content .right .statuses .status .commentSection .comment .commentRightSide .commentPic {
+              float: left;
+              height: 20px; }
+            .content .right .statuses .status .commentSection .comment .commentRightSide .cName {
+              float: left; }
+          .content .right .statuses .status .commentSection .comment .commentLeftSide {
+            width: 60%;
+            float: left; }
+            .content .right .statuses .status .commentSection .comment .commentLeftSide .cText {
+              float: left; }
 .content .left {
-  border: 1px solid blue;
   width: 49%;
-  float: left; }
+  float: left;
+  color: white; }
   .content .left .reg-info {
     margin-left: 40px; }
   .content .left .pictures {
-    width: 50%;
-    border: 1px solid black; }
+    width: 50%; }
     .content .left .pictures .img {
       width: 50%; }
       .content .left .pictures .img .prophoto {
         width: 100%; }
   .content .left .bio {
-    width: 48%;
-    border: 1px solid orange; }
+    width: 48%; }
   .content .left #reg {
     width: 50%; }
 
+.picCollage {
+  width: 80%;
+  margin: 0 auto; }
+  .picCollage .userPhoto {
+    width: 20%;
+    height: 115px;
+    border: 1px solid black;
+    border-radius: 15px;
+    margin-left: 7px;
+    margin-bottom: 10px; }
+
+h1 {
+  margin: 0 auto;
+  text-align: center;
+  color: white; }
+
+.center {
+  width: 80%;
+  margin: 0 100 50 295; }
+  .center .centralPhoto {
+    height: 250px; }
+
 body {
-  background: #6E6E78; }
+  background-image: url("/static/images/pattern29.png"); }
 
 .content {
   width: 80%;

@@ -32,13 +32,37 @@ def redesign(user_id):
 	current_user.owner = str(user_id) == str(session['id'])
 
 	status= getStatuses(user_id)
+	likers= []
+	commenters = []
 	for s in status:
 		if s.date_created:
 			s.date_created = datetime.strftime(s.date_created, '%m/%d/%Y %I:%M%p')
+		try:
+			likes = Likes.select().where(Likes.item_id == s.id)
+			for like in likes:
+				person = Person.select().where(Person.id == like.user_id).get()
+				likers.append(person.f_Name)
+				s.likers = likers
+				s.likes = likes.count()
+				print " IN loop"
+		except:
+			print "No Likes"
+		Comments.select().order_by(Comments.date_created.desc)
+		s.comments = Comments.select().where(Comments.item_id == s.id)
+		for c in s.comments:
+			person = Person.select().where(Person.id == c.user_id).get()
+			c.commenter = str(person.f_Name) + ' ' + str(person.l_Name)
+			c.commenterPic = person.profile_photo
+		# Comments.select().where(Comments.item_id == s.id)
+		# .aggregate(fn.Count(Likes.user_id))
+
 
 	request_names = getPendingRequests(user_id)
 	print"Requests: ", request_names
 
+	friends = getAcceptedFrienships(user_id)
+	friends.extend(getReqFriendships(user_id))
+	print friends, "friends"
 	try:
 		Message.select().order_by(Message.id.desc())
 		message = [m for m in Message.select().where(Message.recipient_id == user_id)]
@@ -46,7 +70,7 @@ def redesign(user_id):
 	except:
 		message = []
 
-	return render_template("profile2.html",current_user = current_user, request_names = request_names, viewer = viewer, message = message, status = status)
+	return render_template("profile2.html",current_user = current_user, request_names = request_names, viewer = viewer, message = message, status = status,friends=friends)
 
 @app.route('/')
 def index():
@@ -106,7 +130,7 @@ def profile(user_id):
 				likers.append(person.f_Name)
 				s.likers = likers
 				s.likes = likes.count()
-				print 'in'
+				print 'in LOOP'
 
 		except:
 			print "No Likes"
@@ -138,7 +162,7 @@ def profile(user_id):
 
 
 
-	return render_template('profile.html', current_user = current_user, request_names = request_names, friends = friends, logged_in = int(session['id']),status = status, message = message, likers = likers)
+	return render_template('profile.html', current_user = current_user, request_names = request_names, friends = friends, logged_in = int(session['id']),status = status, message = message)
 
 @app.route('/editProfile/<user_id>')
 def editProfile(user_id):
@@ -272,6 +296,7 @@ def upload_file():
 def getPictures(user_id):
 	# pictures = Picture.get(Picture.user_id == user_id)
 	currentUserPics = [pic.filename for pic in Picture.select().where(Picture.user_id == user_id)]
+	p = Person.get(Person.id == user_id)
 	# if type(pictures) != list:
 		# pictures = [pictures]
 	# currentUserPics = [pic.filename for pic in pictures]
@@ -281,7 +306,7 @@ def getPictures(user_id):
 	# # getting all files that belong to the user
 	# currentUserPics = [f for f in filenames if f.split('_')[0] == str(user_id)]
 	print "Current Pics", currentUserPics
-	return render_template('pictures.html', pics = currentUserPics)
+	return render_template('pictures.html', pics = currentUserPics, p = p)
 
 @app.route('/goToPicture/<image_name>')
 def goToPicture(image_name):
@@ -289,7 +314,7 @@ def goToPicture(image_name):
 	comments = [c for c in Comments.select().where((pic_info.id == Comments.item_id) & (Comments.type_id == 1))]
 	print(comments, "Comments Not Working:")
 
-	return render_template('picturePage.html', pic_info = pic_info, comments = comments)
+	return render_template('picturePage2.html', pic_info = pic_info, comments = comments)
 
 # @app.route('/pictures/view')
 # def viewPictures():

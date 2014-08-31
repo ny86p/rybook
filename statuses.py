@@ -1,7 +1,6 @@
 from peewee import *
 from datetime import datetime
 
-db = SqliteDatabase('status.db')
 class Status(Model):
 	creater_id = IntegerField()
 	# likes = []

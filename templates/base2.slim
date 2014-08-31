@@ -8,16 +8,16 @@ html
 		.header
 			.left
 				.site_header
-					span.site-name Rybook 
+					span.site-name 
+						a href="{{url_for('home')}}" class="siteNameLink" R 
 					br
 					| {%if viewer%}
-					span  {{viewer.f_Name}} {{viewer.l_Name}}
-					| {%endif%}
+					span  {{current_user.f_Name}} {{current_user.l_Name}}
+					|{%endif%}
 			.right
 				form role="search" action="{{url_for('search')}}" method="post" 
 				      div class="form-group"
 			        		input type="text" name='Search' class="form-control" placeholder="Search..."
-
 		| {%if viewer%}
 		nav.navbar.navbar-default role="navigation" 
 			.container-fluid
@@ -45,6 +45,10 @@ html
 										button.btn.btn-default.btn-sm type="submit" Decline
 			      				li.divider
 			      				| {%endfor%}
+	      				|{%else%}
+				            li
+				            	form action="{{url_for('addFriend', user_id = current_user.id)}}" method='post'
+				                		button class="btn" type='submit' Add Friend 
 			      		| {%endif%}
 						
 						| {% if current_user.owner %}

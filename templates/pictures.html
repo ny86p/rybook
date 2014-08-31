@@ -1,17 +1,1 @@
-<html>
-	<head>
-	    <title>Rybook</title>
-	    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-	    <!-- Bootstrap -->
-	    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css">
-	    <link href="{{ url_for('static', filename='css/picture.css') }}"rel="stylesheet" type="text/css" />  
-	</head>
-	{% for pic in pics %}
-	<div class = "image">
-		<a href = "{{url_for('goToPicture', image_name = pic)}}">
-			<img class = "thumb" src = {{url_for('static', filename = 'images/' + pic)}}>
-		</a>
-		</form>
-	</div>
-	{%endfor%}
-</html>
+{% extends "base2.html" %}{% block content %}<h1>{{p.f_Name}} {{p.l_Name}}'s photos</h1><div class="picCollage">{%for pic in pics%}<a href="{{url_for('goToPicture', image_name= pic)}}"><img class="userPhoto" src="{{url_for('static', filename = 'images/' + pic)}}" /></a>{%endfor%}</div>{% endblock %}

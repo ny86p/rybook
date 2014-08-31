@@ -1,7 +1,6 @@
 from peewee import *
 from datetime import datetime
 
-db = SqliteDatabase('comments.db')
 class Comments(Model):
 	user_id = IntegerField()
 	# Status = 0

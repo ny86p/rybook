@@ -1,6 +1,5 @@
 from peewee import *
 
-db = SqliteDatabase('people.db')
 class Person(Model):
     email = CharField()
     password = CharField() #see if optional
@@ -14,5 +13,3 @@ class Person(Model):
     # gender = CharField()
     # bio = CharField()
     # created = dateField( )
-    class Meta:
-		database = db
