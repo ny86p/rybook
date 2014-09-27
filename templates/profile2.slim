@@ -14,6 +14,15 @@
 			{%endfor%}
 		|{%endif%}
 		br
+		|{%if not current_user.owner%}
+			Mutual Friends
+			{%if mutualFriends%}
+				{%for friend in mutualFriends%}
+					{{friend}}
+				{%endfor%}
+			{%endif%}
+		|{%endif%}
+		br
 		| Birthday: {{current_user.bday}}
 	.pictures
 		| {%if current_user.owner%}
@@ -44,32 +53,35 @@
 					img src="{{url_for('static', filename = 'images/' + current_user.profile_photo)}}" class='thumb'
 				.rightpart
 					.statusInfo
-						span class="statusOwner" {{current_user.f_Name}} {{current_user.l_Name}}	
+						span class="statusOwner" {{current_user.f_Name}} {{current_user.l_Name}}
 						span class="creationDate"  on {{s.date_created}}
 					.middle
-						| {{s.status}} 
+						| {{s.status}}
+						| {{current_user.f_Name in likers}}
+						| {{likers}}
 			.bottom
 				form action="{{url_for('likeStatus',s_id = s.id)}}" method='post' class='likeStatus'
-					button class="btn btn-xs likeButton" type="submit" Like
-				
+					|{%if current_user.f_Name in likers%}
+					button class="btn btn-xs likeButton" type="submit" unlike
+					|{%else%} 
+					button class="btn btn-xs likeButton" type="submit" like
+					|{%endif%}
+
+
+
 				| {{s.likes}}
 				span class="glyphicon glyphicon-thumbs-up"
 
-				form action="{{url_for('comment', item_id = s.id)}}" method='post' class="writeComment"
+				form data-id="{{s.id}}" action="{{url_for('comment')}}" method='post' class="writeComment"
 					div class="input-group"
 						input type="text" name="comment" class="commentBar" placeholder='comment'
 				 		input type="hidden" name="type" value="status"
-	
-			.commentSection 
-					|{%for c in s.comments%}
-					.comment
-						.commentRightSide
-							img src="{{url_for('static', filename = 'images/' + c.commenterPic)}}" class="commentPic"
-							span class="cName" {{c.commenter}}
-						.commentLeftSide
-							span class="cText" {{c.comment}}
 
-					|{%endfor%}
+			.commentSection
+				|{%from 'macros/comment.html' import comment%}
+					{%for c in s.comments%}
+					{{comment(c.comment,c.commenter,c.commenterPic)}}
+					{%endfor%}
 	|{%endfor%}
-
+script src="{{url_for('static', filename ='js/profile.js')}}"
 | {% endblock %}

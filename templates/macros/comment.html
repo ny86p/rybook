@@ -1,0 +1,1 @@
+{% macro comment(comment, commenter, commenterPic) -%}<div class="comment"><div class="commentRightSide"><img class="commentPic" src="{{url_for('static', filename = 'images/' + commenterPic)}}" /><span class="cName">{{commenter}}</span></div><div class="commentLeftSide"><span class="cText">{{comment}}</span></div></div>{%- endmacro %}

@@ -70,7 +70,10 @@ def redesign(user_id):
 	except:
 		message = []
 
-	return render_template("profile2.html",current_user = current_user, request_names = request_names, viewer = viewer, message = message, status = status,friends=friends)
+	viewerFriends = getAcceptedFrienships(session['id'])
+	viewerFriends.extend(getReqFriendships(session['id']))
+	mutualFriends = [f for f in viewerFriends if f in friends]
+	return render_template("profile2.html",current_user = current_user, request_names = request_names, viewer = viewer, message = message, status = status,friends=friends, mutualFriends = mutualFriends, likers=likers)
 
 @app.route('/')
 def index():
@@ -78,16 +81,12 @@ def index():
 
 @app.route('/login', methods = ['POST'])
 def login():
-
-	current_user = Person.get(Person.email == request.form['email'], Person.password == request.form['password'])
-		# return current_user.email
-	session['id'] = current_user.id
-	return redirect(url_for("redesign", user_id = current_user.id))
-	# except:
-	# 	return render_template("index.html")
-		# current_user.active == True
-	# current_user.save()
-	# Try Except when checking information
+	try:
+		current_user = Person.get(Person.email == request.form['email'], Person.password == request.form['password'])
+		session['id'] = current_user.id
+		return jsonify(url = '/redesign/' + str(current_user.id))
+	except:
+		return 403
 
 @app.route('/register')
 def register():
@@ -96,16 +95,22 @@ def register():
 @app.route('/submit_registration', methods = ['POST'])
 def submit_registration():
 # check that no other user has same username/email
-	person = Person()
-	# person.email = request.form['email']
-	# person.password = request.form['password']
-	for key, value in request.form.items():
-		# items.append(key)
-		setattr(person, key, value)
-	print "email:" , person.email
-	# print "Person Email:" + person.email
-	person.save()
-	return redirect(url_for('index'))
+	try:
+		person = Person()
+		# person.email = request.form['email']
+		# person.password = request.form['password']
+		for key, value in request.form.items():
+			# items.append(key)	
+			setattr(person, key, value)
+		print "email:" , person.email
+		# print "Person Email:" + person.email
+		person.save()
+		print "Yes?"
+		return jsonify(url = '/redesign/' + str(person.id))
+	except:
+		print "Whoops error"
+		return jsonify(error = "something went wrong with your registration")
+
 
 @app.route('/home')
 def home():
@@ -238,19 +243,21 @@ def likeStatus(s_id):
 		like.save()
 	return redirect(request.referrer)
 
-@app.route('/comment/<item_id>', methods = ['POST'])
-def comment(item_id):
-	print item_id, "ID", "Request", request.form
+@app.route('/comment', methods = ['POST'])
+def comment():
 	etype = request.form['type']
-	print etype, "Type id:"
 	if etype == "status":
 		type_id = 0
 	elif etype == "picture":
 		type_id = 1
-	comment = Comments.create(user_id = session['id'], item_id = item_id, type_id = type_id, comment = request.form['comment'])
+	comment = Comments.create(user_id = session['id'], item_id = request.form['itemId'], type_id = type_id, comment = request.form['comment'])
 	comment.save()
-	return redirect(request.referrer)
-
+	comment_macro = get_template_attribute('macros/comment.html', 'comment')
+	person = Person.select().where(Person.id == comment.user_id).get()
+	commenter = str(person.f_Name) + ' ' + str(person.l_Name)
+	commenterPic = person.profile_photo
+	html = comment_macro(comment.comment, commenter, commenterPic)
+	return jsonify(html = html)
 
 @app.route('/sendMessage/<user_id>', methods = ['POST'])
 def sendMessage(user_id):
