@@ -3,7 +3,16 @@
 .center
 	img class="centralPhoto" src="{{url_for('static', filename = 'images/' + pic_info.filename)}}"
 
-form action="{{url_for('comment', item_id = pic_info.id)}}" method='post'
-		input type="text" name='comment' class="search-query span2" placeholder="Comment"
+form data-id="{{pic_info.id}}" action="{{url_for('comment', item_id = pic_info.id)}}" method='post'
+		input type="text" name='comment' class="commentBar2" placeholder="Comment"
 		input type="hidden" name="type" value='picture'
+
+.picComments
+	|{%from 'macros/comment.html' import comment%}
+		{%for c in pic_info.comments%}
+		{{comment(c)}}
+		{%endfor%}
+
+script src="{{url_for('static', filename ='js/picturePage.js')}}"
+
 | {% endblock %}

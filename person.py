@@ -1,6 +1,6 @@
 from peewee import *
 
-class Person(Model):
+class User(Model):
     email = CharField()
     password = CharField() #see if optional
     f_Name = CharField()

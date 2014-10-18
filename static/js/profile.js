@@ -17,3 +17,4 @@ $(".commentBar").keydown(function(e){
 		return false;
 	} 
 });
+

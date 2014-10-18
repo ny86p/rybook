@@ -60,7 +60,7 @@
 						| {{current_user.f_Name in likers}}
 						| {{likers}}
 			.bottom
-				form action="{{url_for('likeStatus',s_id = s.id)}}" method='post' class='likeStatus'
+				form data-id="{{s.item_id}}"action="{{url_for('likeStatus',s_id = s.id)}}" method='post' class='likeStatus'
 					|{%if current_user.f_Name in likers%}
 					button class="btn btn-xs likeButton" type="submit" unlike
 					|{%else%} 
@@ -80,7 +80,7 @@
 			.commentSection
 				|{%from 'macros/comment.html' import comment%}
 					{%for c in s.comments%}
-					{{comment(c.comment,c.commenter,c.commenterPic)}}
+					{{comment(c)}}
 					{%endfor%}
 	|{%endfor%}
 script src="{{url_for('static', filename ='js/profile.js')}}"

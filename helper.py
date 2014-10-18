@@ -10,7 +10,7 @@ def getPendingRequests(user_id):
 		# find all pending request for current user
 		pending_requests = Friendship.select().where((Friendship.user_id == user_id) & (Friendship.accepted == 0)).get()
 		#for each request, get info of requester
-		return [Person.get(request.friend_user_id == Person.id).f_Name for request in pending_requests.select()]
+		return [User.get(request.friend_user_id == User.id).f_Name for request in pending_requests.select()]
 	except:
 		return []
 
@@ -19,7 +19,7 @@ def getReqFriendships(user_id):
 	friends = []
 	try:
 		for friendship in Friendship.select().where((Friendship.friend_user_id == user_id) & (Friendship.accepted == 1)):
-			friend = Person.get(Person.id == friendship.user_id)
+			friend = User.get(User.id == friendship.user_id)
 			friends.append(friend.f_Name)
 		return friends
 	except:
@@ -29,7 +29,7 @@ def getAcceptedFrienships(user_id):
 	friends = []
 	try:
 		for f in Friendship.select().where((Friendship.user_id == user_id) & (Friendship.accepted == 1)):
-			friend = Person.get(Person.id == f.friend_user_id)
+			friend = User.get(User.id == f.friend_user_id)
 			friends.append(friend.f_Name)
 		return friends
 	except:
@@ -44,7 +44,7 @@ def getLikes(status):
 		try:
 			likes = Likes.select().where(Likes.item_id == s.id)
 			for like in likes:
-				person = Person.select().where(Person.id == like.user_id).get()
+				person = User.select().where(User.id == like.user_id).get()
 				likers.append(person.f_Name)
 				s.likers = likers
 				s.likes = likes.count()

@@ -22,12 +22,11 @@ def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1] in  app.config['ALLOWED_EXTENSIONS']
 
-@app.route('/redesign/<user_id>')
-def redesign(user_id):
-	viewer = Person.select().where(Person.id == session['id']).get()
+@app.route('/profile/<user_id>')
+def profile(user_id):
+	viewer = User.select().where(User.id == session['id']).get()
 	# Grab current_users info
-	# current_user = page owner, 
-	current_user = Person.select().where(Person.id == user_id).get()
+	current_user = User.select().where(User.id == user_id).get()
 	# check if the person viewing page is the owner
 	current_user.owner = str(user_id) == str(session['id'])
 
@@ -40,7 +39,7 @@ def redesign(user_id):
 		try:
 			likes = Likes.select().where(Likes.item_id == s.id)
 			for like in likes:
-				person = Person.select().where(Person.id == like.user_id).get()
+				person = User.select().where(User.id == like.user_id).get()
 				likers.append(person.f_Name)
 				s.likers = likers
 				s.likes = likes.count()
@@ -50,11 +49,8 @@ def redesign(user_id):
 		Comments.select().order_by(Comments.date_created.desc)
 		s.comments = Comments.select().where(Comments.item_id == s.id)
 		for c in s.comments:
-			person = Person.select().where(Person.id == c.user_id).get()
-			c.commenter = str(person.f_Name) + ' ' + str(person.l_Name)
-			c.commenterPic = person.profile_photo
-		# Comments.select().where(Comments.item_id == s.id)
-		# .aggregate(fn.Count(Likes.user_id))
+			c.commenter = str(c.user.f_Name) + ' ' + str(c.user.l_Name)
+			c.commenterPic = c.user.profile_photo
 
 
 	request_names = getPendingRequests(user_id)
@@ -82,110 +78,47 @@ def index():
 @app.route('/login', methods = ['POST'])
 def login():
 	try:
-		current_user = Person.get(Person.email == request.form['email'], Person.password == request.form['password'])
+		current_user = User.get(User.email == request.form['email'], User.password == request.form['password'])
 		session['id'] = current_user.id
-		return jsonify(url = '/redesign/' + str(current_user.id))
+		return jsonify(url = '/profile/' + str(current_user.id))
 	except:
 		return 403
 
-@app.route('/register')
-def register():
-	return render_template("registration.html")
 
 @app.route('/submit_registration', methods = ['POST'])
 def submit_registration():
 # check that no other user has same username/email
 	try:
-		person = Person()
-		# person.email = request.form['email']
-		# person.password = request.form['password']
+		person = User()
 		for key, value in request.form.items():
-			# items.append(key)	
 			setattr(person, key, value)
-		print "email:" , person.email
-		# print "Person Email:" + person.email
 		person.save()
-		print "Yes?"
-		return jsonify(url = '/redesign/' + str(person.id))
+		return jsonify(url = '/profile/' + str(person.id))
 	except:
-		print "Whoops error"
 		return jsonify(error = "something went wrong with your registration")
 
 
 @app.route('/home')
 def home():
-	return redirect(url_for('redesign', user_id = session['id']))
+	return redirect(url_for('profile', user_id = session['id']))
 
-@app.route('/profile/<user_id>')
-def profile(user_id):
-	# print 'Pending Requests:', getPendingRequests(user_id)
-
-	current_user = Person.select().where(Person.id == user_id).get()
-	current_user.owner = str(user_id) == str(session['id'])
-	likers = []
-	commenters = []
-
-	# get statuses for user
-	status = getStatuses(user_id)
-	for s in status:
-		try:
-			likes = Likes.select().where(Likes.item_id == s.id)
-			for like in likes:
-				person = Person.select().where(Person.id == like.user_id).get()
-				likers.append(person.f_Name)
-				s.likers = likers
-				s.likes = likes.count()
-				print 'in LOOP'
-
-		except:
-			print "No Likes"
-		comments = Comments.select().where(Comments.item_id == s.id)
-		for c in comments:
-			person = Person.select().where(Person.id == c.user_id).get()
-			commenters.append(person.f_Name)
-
-		# Comments.select().where(Comments.item_id == s.id)
-		# .aggregate(fn.Count(Likes.user_id))
-		s.comments = ([c.comment for c in Comments.select().where(Comments.item_id == s.id)], commenters)
-
-	# get pending requests for user, only shown is session id = user id
-	request_names = getPendingRequests(user_id)
-
-	# get Friends
-	friends = getReqFriendships(user_id)
-	friends.extend(getAcceptedFrienships(user_id))
-
-	# message = []
-	# for m in Message.select().where(Message.recipient_id == user_id):
-	# 	message.append(m)
-	try:
-		Message.select().order_by(Message.id.desc())
-		message = [m for m in Message.select().where(Message.recipient_id == user_id)]
-
-	except:
-		message = []
-
-
-
-	return render_template('profile.html', current_user = current_user, request_names = request_names, friends = friends, logged_in = int(session['id']),status = status, message = message)
 
 @app.route('/editProfile/<user_id>')
 def editProfile(user_id):
 	if str(user_id) != str(session['id']):
 		return redirect(url_for('index'))
-	person = Person.get(Person.id == user_id)
+	person = User.get(User.id == user_id)
 	print "Session Id:", session['id']
 	return render_template('editProfile.html', current_user = person, edit = True)
 
-
+# TODO: using this??
 @app.route('/fixedProfile/<user_id>', methods = ['POST'])
 def fixedProfile(user_id):
-	person = Person.get(Person.id == user_id)
+	person = User.get(User.id == user_id)
 	for key, value in request.form.items():
 		setattr(person, key, value)
 	person.save()
 	return redirect(url_for('profile', user_id = person.id))
-# Basically like registration
 
 
 @app.route('/addFriend/<user_id>', methods = ['POST'])
@@ -195,7 +128,7 @@ def addFriend(user_id):
 
 @app.route('/acceptRequest/<friend>', methods = ['POST'])
 def acceptRequest(friend):
-	friend_id = Person.get(Person.f_Name == friend)
+	friend_id = User.get(User.f_Name == friend)
 	print 'Friend id:', friend_id, friend
 	f  = Friendship.select().where((Friendship.user_id == session['id']) & (Friendship.friend_user_id == friend_id)).get()
 	f.accepted = 1
@@ -204,7 +137,7 @@ def acceptRequest(friend):
 
 @app.route('/declineRequest/<friend>', methods = ['POST'])
 def declineRequest(friend):
-	friend_id = Person.get(Person.f_Name == friend)
+	friend_id = User.get(User.f_Name == friend)
 	f  = Friendship.select().where((Friendship.user_id == session['id']) & (Friendship.friend_user_id == friend_id)).get()
 	f.accepted = -1
 	f.save()
@@ -213,12 +146,12 @@ def declineRequest(friend):
 @app.route('/search',  methods = ['POST'])
 def search():
 	names = []
-	for person in Person.select():
+	for person in User.select():
 		names.append(person.f_Name)
 	if request.form['Search'] in names:
 		try:
-			person = Person.get(Person.f_Name == request.form['Search'])
-			return redirect(url_for('redesign', user_id = person.id))
+			person = User.get(User.f_Name == request.form['Search'])
+			return redirect(url_for('profile', user_id = person.id))
 		except:
 			return redirect(request.referrer)
 	else:
@@ -233,7 +166,6 @@ def writeStatus():
 @app.route('/likeStatus/<s_id>', methods = ['POST'])
 def likeStatus(s_id):
 	current_status = Status.get(Status.id == s_id)
-	# current_status.likes.append(session['id'])
 	try:
 		like = Likes.select().where((Likes.user_id == session['id']) & (Likes.item_id == s_id)).get()
 		like.delete_instance()
@@ -250,14 +182,13 @@ def comment():
 		type_id = 0
 	elif etype == "picture":
 		type_id = 1
-	comment = Comments.create(user_id = session['id'], item_id = request.form['itemId'], type_id = type_id, comment = request.form['comment'])
-	comment.save()
+	c = Comments.create(user = session['id'], item_id = request.form['itemId'], type_id = type_id, comment = request.form['comment'])
+	c.save()
 	comment_macro = get_template_attribute('macros/comment.html', 'comment')
-	person = Person.select().where(Person.id == comment.user_id).get()
-	commenter = str(person.f_Name) + ' ' + str(person.l_Name)
-	commenterPic = person.profile_photo
-	html = comment_macro(comment.comment, commenter, commenterPic)
+	html = comment_macro(c)
 	return jsonify(html = html)
+
+
 
 @app.route('/sendMessage/<user_id>', methods = ['POST'])
 def sendMessage(user_id):
@@ -266,21 +197,6 @@ def sendMessage(user_id):
 	m.save()
 	# return redirect(url_for('profile', user_id = user_id))
 	return redirect(request.referrer)
-
-# @app.route('/deleteMessage')
-# def deleteMessage():
-
-
-# @app.route('/verify')
-# def verify():
-# 	return render_template('activate.html')
-	# render the template- once this template is visited, activate user
-	# and have type in activation code (**maybe) or just click button that says activate
-
-# @app.route('/activate')
-# def activate:
-# 	for person in Person.select():
-# 			current_user = person
 
 
 @app.route('/upload_file', methods=['POST'])
@@ -293,7 +209,7 @@ def upload_file():
         print "Request.form", request.form
         if int(request.form['isProfilePhoto']) == 1:
         	print "It Works"
-	    	p = Person.select().where(Person.id == session['id']).get()
+	    	p = User.select().where(User.id == session['id']).get()
 	    	p.profile_photo = filename
 	    	p.save()
         file.save(os.path.join(app.config['UPLOAD_FOLDER'],filename))
@@ -301,30 +217,17 @@ def upload_file():
 
 @app.route('/getPictures/<user_id>')
 def getPictures(user_id):
-	# pictures = Picture.get(Picture.user_id == user_id)
 	currentUserPics = [pic.filename for pic in Picture.select().where(Picture.user_id == user_id)]
-	p = Person.get(Person.id == user_id)
-	# if type(pictures) != list:
-		# pictures = [pictures]
-	# currentUserPics = [pic.filename for pic in pictures]
-	# import os
-	# # getting all filenames in the images directory
-	# filenames = [f for f in os.listdir(app.config['UPLOAD_FOLDER']) if os.path.isfile(os.path.join(app.config['UPLOAD_FOLDER'], f))]
-	# # getting all files that belong to the user
-	# currentUserPics = [f for f in filenames if f.split('_')[0] == str(user_id)]
+	p = User.get(User.id == user_id)
 	print "Current Pics", currentUserPics
 	return render_template('pictures.html', pics = currentUserPics, p = p)
 
 @app.route('/goToPicture/<image_name>')
 def goToPicture(image_name):
 	pic_info = Picture.get(Picture.filename == image_name)
-	comments = [c for c in Comments.select().where((pic_info.id == Comments.item_id) & (Comments.type_id == 1))]
-	print(comments, "Comments Not Working:")
-
-	return render_template('picturePage2.html', pic_info = pic_info, comments = comments)
-
-# @app.route('/pictures/view')
-# def viewPictures():
+	pic_info.comments = [c for c in Comments.select().where((pic_info.id == Comments.item_id) & (Comments.type_id == 1))]
+	print(pic_info.comments, "Comments Not Working:")
+	return render_template('picturePage2.html', pic_info = pic_info)
 
 
 @app.route('/logout')

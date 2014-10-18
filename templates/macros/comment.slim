@@ -1,9 +1,9 @@
-|{% macro comment(comment, commenter, commenterPic) -%}
+|{% macro comment(comment) -%}
 .comment
 	.commentRightSide
-		img src="{{url_for('static', filename = 'images/' + commenterPic)}}" class="commentPic"
-		span class="cName" {{commenter}}
+		img src="{{url_for('static', filename = 'images/' + comment.user.profile_photo)}}" class="commentPic"
+		span class="cName" {{comment.user.f_Name}} {{comment.user.l_Name}}
 	.commentLeftSide
-		span class="cText" {{comment}}
+		span class="cText" {{comment.comment}}
 |{%- endmacro %}
 
