@@ -31,19 +31,19 @@ def profile(user_id):
 	current_user.owner = str(user_id) == str(session['id'])
 
 	status= getStatuses(user_id)
-	likers= []
 	commenters = []
 	for s in status:
 		if s.date_created:
 			s.date_created = datetime.strftime(s.date_created, '%m/%d/%Y %I:%M%p')
 		try:
 			likes = Likes.select().where(Likes.item_id == s.id)
+			likers= []
 			for like in likes:
 				person = User.select().where(User.id == like.user_id).get()
 				likers.append(person.f_Name)
-				s.likers = likers
 				s.likes = likes.count()
 				print " IN loop"
+			s.likers = likers
 		except:
 			print "No Likes"
 		Comments.select().order_by(Comments.date_created.desc)

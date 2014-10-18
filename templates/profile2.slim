@@ -57,11 +57,9 @@
 						span class="creationDate"  on {{s.date_created}}
 					.middle
 						| {{s.status}}
-						| {{current_user.f_Name in likers}}
-						| {{likers}}
 			.bottom
 				form data-id="{{s.item_id}}"action="{{url_for('likeStatus',s_id = s.id)}}" method='post' class='likeStatus'
-					|{%if current_user.f_Name in likers%}
+					|{%if current_user.f_Name in s.likers%}
 					button class="btn btn-xs likeButton" type="submit" unlike
 					|{%else%} 
 					button class="btn btn-xs likeButton" type="submit" like
