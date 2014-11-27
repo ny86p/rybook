@@ -211,6 +211,27 @@ h1 {
   .center .centralPhoto {
     height: 250px; }
 
+.lower {
+  width: 50%; }
+  .lower .picComments {
+    background: #FFB6C1; }
+    .lower .picComments .comment {
+      height: 42px;
+      border: 1px solid #ED145B; }
+      .lower .picComments .comment .commentRightSide {
+        float: left;
+        width: 40%; }
+        .lower .picComments .comment .commentRightSide .commentPic {
+          float: left;
+          height: 20px; }
+        .lower .picComments .comment .commentRightSide .cName {
+          float: left; }
+      .lower .picComments .comment .commentLeftSide {
+        width: 60%;
+        float: left; }
+        .lower .picComments .comment .commentLeftSide .cText {
+          float: left; }
+
 body {
   background-image: url("/static/images/pattern29.png"); }
 

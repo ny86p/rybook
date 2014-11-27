@@ -12,6 +12,7 @@ from likes import *
 import os
 from comments import *
 from werkzeug.utils import secure_filename
+import constants
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = 'static/images'
@@ -33,6 +34,7 @@ def profile(user_id):
 	status= getStatuses(user_id)
 	commenters = []
 	for s in status:
+		s.type_id = constants.types['status']
 		if s.date_created:
 			s.date_created = datetime.strftime(s.date_created, '%m/%d/%Y %I:%M%p')
 		try:
@@ -49,8 +51,7 @@ def profile(user_id):
 		Comments.select().order_by(Comments.date_created.desc)
 		s.comments = Comments.select().where(Comments.item_id == s.id)
 		for c in s.comments:
-			c.commenter = str(c.user.f_Name) + ' ' + str(c.user.l_Name)
-			c.commenterPic = c.user.profile_photo
+			c.type_id = constants.types['comment']
 
 
 	request_names = getPendingRequests(user_id)
@@ -163,17 +164,20 @@ def writeStatus():
 	s.save()
 	return redirect(request.referrer)
 
-@app.route('/likeStatus/<s_id>', methods = ['POST'])
-def likeStatus(s_id):
-	current_status = Status.get(Status.id == s_id)
+@app.route('/like', methods = ['POST'])
+def like():
+	print request.form["itemId"], "Requst form"
+	current_status = Status.get(Status.id == request.form["itemId"])
 	try:
-		like = Likes.select().where((Likes.user_id == session['id']) & (Likes.item_id == s_id)).get()
+		status = 0
+		like = Likes.select().where((Likes.user_id == session['id']) & (Likes.item_id == request.form["itemId"]) & (Likes.type_id == request.form["typeId"])).get()
 		like.delete_instance()
 		like.save()
 	except:
-		like = Likes.create(user_id = session['id'], item_id = s_id)
+		status = 1
+		like = Likes.create(user_id = session['id'], item_id = request.form["itemId"], type_id = request.form["typeId"])
 		like.save()
-	return redirect(request.referrer)
+	return jsonify(like = status) #0 for unlike 1 for a like
 
 @app.route('/comment', methods = ['POST'])
 def comment():

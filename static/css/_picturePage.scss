@@ -6,3 +6,32 @@
 		height: 250px;
 	}
 }
+
+.lower{
+	width: 50%;
+	.picComments{
+		background: #FFB6C1;
+		.comment{
+			height: 42px;
+			border: 1px solid #ED145B;
+			.commentRightSide{
+				float: left;
+				width: 40%;
+				.commentPic{
+					float: left;
+					height: 20px;
+				}
+				.cName{
+					float: left;
+				}
+			}
+	 		.commentLeftSide{
+				width: 60%;
+				float: left;
+				.cText{
+					float: left;
+				}
+			}
+	}
+}
+}

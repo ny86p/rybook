@@ -8,31 +8,31 @@ html
 		.header
 			.left
 				.site_header
-					span.site-name 
-						a href="{{url_for('home')}}" class="siteNameLink" R 
+					span.site-name
+						a href="{{url_for('home')}}" class="siteNameLink" R
 					br
 					| {%if viewer%}
 					span  {{current_user.f_Name}} {{current_user.l_Name}}
 					|{%endif%}
 			.right
-				form role="search" action="{{url_for('search')}}" method="post" 
+				form role="search" action="{{url_for('search')}}" method="post"
 				      div class="form-group"
 			        		input type="text" name='Search' class="form-control" placeholder="Search..."
 		| {%if viewer%}
-		nav.navbar.navbar-default role="navigation" 
+		nav.navbar.navbar-default role="navigation"
 			.container-fluid
 				.collapse.navbar-collapse
 					ul.nav.navbar-nav
 						li.home
-							a href="{{url_for('home')}}" 
+							a href="{{url_for('home')}}"
 								img src="{{url_for('static', filename = 'images/' + viewer.profile_photo)}}" class='profile_photo'
 								| {{viewer.f_Name}}
 
 						| {% if current_user.owner %}
 						li.dropdown
-							a.dropdown-toggle data-toggle="dropdown" href="#" 
+							a.dropdown-toggle data-toggle="dropdown" href="#"
 								| Requests
-							ul.dropdown-menu 
+							ul.dropdown-menu
 								| {% if not request_names.length%}
 									No Current Requests
 								| {%endif%}
@@ -48,12 +48,12 @@ html
 	      				|{%else%}
 	      				li
 	      					form action="{{url_for('addFriend', user_id = current_user.id)}}" method='post'
-	      						button class="btn" type='submit' Add Friend 
+	      						button class="btn" type='submit' Add Friend
 			      		| {%endif%}
-						
+
 						| {% if current_user.owner %}
 						li.dropdown
-							a.dropdown-toggle data-toggle="dropdown" href="#" 
+							a.dropdown-toggle data-toggle="dropdown" href="#"
 								| Messages
 							ul.dropdown-menu
 								| {% if not message.length%}
@@ -70,7 +70,7 @@ html
 
 
 						li.dropdown
-							a.dropdown-toggle data-toggle="dropdown" href="#" 
+							a.dropdown-toggle data-toggle="dropdown" href="#"
     								| Dropdown
 							ul.dropdown-menu
 							  li
@@ -80,7 +80,7 @@ html
 							  li
 							    a href="{{url_for('logout')}}"  Log Out
 		| {%endif%}
-		.content			
+		.content
 			| {% block content %}
 			| {% endblock %}
 
