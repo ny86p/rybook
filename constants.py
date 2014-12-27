@@ -1,5 +1,5 @@
 types = {
 	"status": 0,
-	"photo": 1,
+	"picture": 1,
 	"comment": 2
 }

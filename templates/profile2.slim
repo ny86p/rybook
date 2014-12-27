@@ -59,7 +59,7 @@
 						| {{s.status}}
 			.bottom
 				form data-type-id="{{s.type_id}}" data-id="{{s.id}}" class='likeStatus'
-					|{%if current_user.f_Name in s.likers%}
+					|{%if viewer.f_Name in s.likers%}
 					button class="btn btn-xs unlike" type="submit" unlike
 					button class="btn btn-xs like" type="submit"  style="display: none" like
 					|{%else%} 
@@ -82,6 +82,7 @@
 					{%for c in s.comments%}
 					{{comment(c)}}
 					{%endfor%}
+					
 	|{%endfor%}
 script src="{{url_for('static', filename ='js/profile.js')}}"
 | {% endblock %}

@@ -1,7 +1,10 @@
 from peewee import *
 from datetime import datetime
+from comments import *
+
 
 class Status(Model):
+	# comments = ForeignKeyField(Comments, null = True,related_name = "status")
 	creater_id = IntegerField()
 	# likes = []
 	status = CharField()

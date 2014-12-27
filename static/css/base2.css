@@ -18,7 +18,8 @@
         font-size: 25px;
         border-radius: 7px;
         background: white;
-        padding-left: 7px;
+        padding-left: 5px;
+        padding-right: 5px;
         color: black; }
         .header .left .site_header .site-name .siteNameLink {
           color: black; }
@@ -152,6 +153,8 @@
             background: #ED145B; }
             .content .right .statuses .status .bottom .likeStatus .likeButton:hover {
               text-decoration: underline; }
+        .content .right .statuses .status .bottom .likesCount {
+          float: left; }
       .content .right .statuses .status .commentSection {
         width: 100%;
         float: left;
@@ -205,11 +208,23 @@ h1 {
   text-align: center;
   color: white; }
 
-.center {
+.picFrame {
   width: 80%;
-  margin: 0 100 50 295; }
-  .center .centralPhoto {
-    height: 250px; }
+  margin: 0 0 50 210; }
+  .picFrame .centralPhoto {
+    height: 250px;
+    width: 50%; }
+  .picFrame .picFeedback {
+    width: 50%;
+    height: 25px; }
+    .picFrame .picFeedback .commentOnPic {
+      float: right;
+      height: 90%; }
+    .picFrame .picFeedback .likePicture {
+      float: left; }
+    .picFrame .picFeedback .picLikeCount {
+      color: white;
+      float: left; }
 
 .lower {
   width: 50%; }

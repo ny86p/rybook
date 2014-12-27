@@ -29,13 +29,13 @@ for i in range(1,5):
 Picture.drop_table(True)
 Picture.create_table()
 for i in range(5):
-	pics = Picture.create(user_id = i+1,filename ="url.jpeg")
+	pics = Picture.create(user = i+1,filename ="url.jpeg")
 	pics.save()
 
 Likes.drop_table(True)
 Likes.create_table()
 for i in range(5):
-	l = Likes.create(user_id = i+1, item_id = i+2)
+	l = Likes.create(user = i+1, item_id = i+2)
 	l.save()
 
 Comments.drop_table(True)
