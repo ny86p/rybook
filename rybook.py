@@ -13,6 +13,7 @@ import os
 from comments import *
 from werkzeug.utils import secure_filename
 import constants
+import sys
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = 'static/images'
@@ -38,16 +39,20 @@ def profile(user_id):
 		if s.date_created:
 			s.date_created = datetime.strftime(s.date_created, '%m/%d/%Y %I:%M%p')
 		try:
-			likes = Likes.select().where(Likes.item_id == s.id)
+			likes = Likes.select().where((Likes.item_id == s.id) & (Likes.type_id == s.type_id))
+			print s.id, "Status id"
+			# print len(likes), "Number of Likes"
+			# likes =  User.likes.select().where(Likes)
 			likers= []
 			for like in likes:
-				person = User.select().where(User.id == like.user_id).get()
+				person = User.select().where(User.id == like.user.id).get()
 				likers.append(person.f_Name)
-				s.likes = likes.count()
 				print " IN loop"
+			s.likes = len(likers)
 			s.likers = likers
+			print s.likes, "Likes on status", likers
 		except:
-			print "No Likes"
+		 	print "No Likes", sys.exc_info()[0]
 		Comments.select().order_by(Comments.date_created.desc)
 		s.comments = Comments.select().where(Comments.item_id == s.id)
 		for c in s.comments:
@@ -70,7 +75,7 @@ def profile(user_id):
 	viewerFriends = getAcceptedFrienships(session['id'])
 	viewerFriends.extend(getReqFriendships(session['id']))
 	mutualFriends = [f for f in viewerFriends if f in friends]
-	return render_template("profile2.html",current_user = current_user, request_names = request_names, viewer = viewer, message = message, status = status,friends=friends, mutualFriends = mutualFriends, likers=likers)
+	return render_template("profile2.html",current_user = current_user, request_names = request_names, viewer = viewer, message = message, status = status,friends=friends, mutualFriends = mutualFriends)
 
 @app.route('/')
 def index():
@@ -170,12 +175,12 @@ def like():
 	current_status = Status.get(Status.id == request.form["itemId"])
 	try:
 		status = 0
-		like = Likes.select().where((Likes.user_id == session['id']) & (Likes.item_id == request.form["itemId"]) & (Likes.type_id == request.form["typeId"])).get()
+		like = Likes.select().where((Likes.user == session['id']) & (Likes.item_id == request.form["itemId"]) & (Likes.type_id == request.form["typeId"])).get()
 		like.delete_instance()
 		like.save()
 	except:
 		status = 1
-		like = Likes.create(user_id = session['id'], item_id = request.form["itemId"], type_id = request.form["typeId"])
+		like = Likes.create(user = session['id'], item_id = request.form["itemId"], type_id = request.form["typeId"])
 		like.save()
 	return jsonify(like = status) #0 for unlike 1 for a like
 
@@ -208,7 +213,7 @@ def upload_file():
     file = request.files['file']
     if file and allowed_file(file.filename):
         filename = secure_filename(file.filename)
-        pic = Picture.create(user_id = session['id'], filename = filename)
+        pic = Picture.create(user = session['id'], filename = filename)
         pic.save()
         print "Request.form", request.form
         if int(request.form['isProfilePhoto']) == 1:
@@ -221,17 +226,25 @@ def upload_file():
 
 @app.route('/getPictures/<user_id>')
 def getPictures(user_id):
-	currentUserPics = [pic.filename for pic in Picture.select().where(Picture.user_id == user_id)]
-	p = User.get(User.id == user_id)
-	print "Current Pics", currentUserPics
-	return render_template('pictures.html', pics = currentUserPics, p = p)
+	pic_owner = User.get(User.id == user_id)
+	current_user_pics = [pic.filename for pic in pic_owner.pictures]
+	return render_template('pictures.html', pics = current_user_pics, p = pic_owner)
 
 @app.route('/goToPicture/<image_name>')
 def goToPicture(image_name):
+	viewer = User.get(User.id == session['id'])
 	pic_info = Picture.get(Picture.filename == image_name)
-	pic_info.comments = [c for c in Comments.select().where((pic_info.id == Comments.item_id) & (Comments.type_id == 1))]
+	pic_info.type_id = constants.types['picture'] 
+	pic_info.comments = [c for c in Comments.select().where((pic_info.id == Comments.item_id) & (Comments.type_id == constants.types['picture'] ))]
+	likers = []
+	for like in Likes.select().where(Likes.item_id == pic_info.id & Likes.type_id == constants.types['picture']):
+		person = User.select().where(User.id == like.user.id).get()
+		likers.append(person.f_Name)
+	pic_info.likers = likers
+	print likers, "Pic Likers"
+	pic_info.likes = len(likers)
 	print(pic_info.comments, "Comments Not Working:")
-	return render_template('picturePage2.html', pic_info = pic_info)
+	return render_template('picturePage2.html', pic_info = pic_info, viewer=viewer, current_user = pic_info.user)
 
 
 @app.route('/logout')

@@ -19,34 +19,11 @@ $(".commentBar").keydown(function(e){
 });
 
 $("form.likeStatus button").click(function(e){
-	var $this = $(this);
-	var $form = $this.parents('form');
-	var $like = $form.find("button.like");
-	var $unlike = $form.find("button.unlike");
-	var $likesCount = $form.siblings(".likesCount");
-	var likesCount = Number($likesCount.text());
-	var data = {};
-	data.itemId = $form.data('id');
-	data.typeId = $form.data("type-id");
-	$.ajax({
-			type: "post",
-			url: "/like",
-			data: data,
-			success: function(response){
-				if(response.like === 0){
-					$like.show();
-					$unlike.hide();
-					likesCount--;
-				}
-				else{
-					$unlike.show();
-					$like.hide();
-					likesCount++;
-				}
-
-				$likesCount.text(likesCount);
-			}
-	});
+	var like = new window.Like();
+	like.likesCountSelector = ".likesCount";
+	like.clickedElement = this;
+	like.save();
 	e.preventDefault();
+
 });
 

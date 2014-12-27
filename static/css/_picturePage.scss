@@ -1,10 +1,27 @@
-.center{
+.picFrame{
 	width: 80%;
-	margin: 0 100 50 295;
+	margin: 0 0 50 210;
 
 	.centralPhoto{
 		height: 250px;
+		width: 50%;
 	}
+	.picFeedback{
+	width: 50%;
+	height: 25px;
+	.commentOnPic{
+		float: right;
+		height: 90%;
+	}
+	.likePicture{
+		float: left;
+	}
+	.picLikeCount{
+		color: white;
+		float: left;
+	}
+}
+
 }
 
 .lower{

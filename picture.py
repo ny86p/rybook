@@ -1,9 +1,9 @@
 from peewee import *
 from datetime import datetime
+from person import *
 
 class Picture(Model):
-	# user who uploaded the picture
-	user_id = IntegerField()
+	user = ForeignKeyField(User, null = True,related_name = "pictures")
 	# filename of the picture
 	filename = CharField()
 	date_created = DateTimeField(default=datetime.now)
