@@ -160,20 +160,22 @@
         float: left;
         background-color: lightpink; }
         .content .right .statuses .status .commentSection .comment {
-          height: 42px;
+          height: 50px;
           border: 1px solid #ED145B; }
-          .content .right .statuses .status .commentSection .comment .commentRightSide {
+          .content .right .statuses .status .commentSection .comment .commentLeftSide {
             float: left;
             width: 40%; }
-            .content .right .statuses .status .commentSection .comment .commentRightSide .commentPic {
+            .content .right .statuses .status .commentSection .comment .commentLeftSide .commentPic {
               float: left;
               height: 20px; }
-            .content .right .statuses .status .commentSection .comment .commentRightSide .cName {
+            .content .right .statuses .status .commentSection .comment .commentLeftSide .cName {
               float: left; }
-          .content .right .statuses .status .commentSection .comment .commentLeftSide {
+          .content .right .statuses .status .commentSection .comment .commentRightside {
             width: 60%;
             float: left; }
-            .content .right .statuses .status .commentSection .comment .commentLeftSide .cText {
+            .content .right .statuses .status .commentSection .comment .commentRightside .likeComment {
+              float: right; }
+            .content .right .statuses .status .commentSection .comment .commentRightside .cText {
               float: left; }
 .content .left {
   width: 49%;
@@ -233,18 +235,18 @@ h1 {
     .lower .picComments .comment {
       height: 42px;
       border: 1px solid #ED145B; }
-      .lower .picComments .comment .commentRightSide {
+      .lower .picComments .comment .commentLeftSide {
         float: left;
         width: 40%; }
-        .lower .picComments .comment .commentRightSide .commentPic {
+        .lower .picComments .comment .commentLeftSide .commentPic {
           float: left;
           height: 20px; }
-        .lower .picComments .comment .commentRightSide .cName {
+        .lower .picComments .comment .commentLeftSide .cName {
           float: left; }
-      .lower .picComments .comment .commentLeftSide {
+      .lower .picComments .comment .commentRightSide {
         width: 60%;
         float: left; }
-        .lower .picComments .comment .commentLeftSide .cText {
+        .lower .picComments .comment .commentRightSide .cText {
           float: left; }
 
 body {

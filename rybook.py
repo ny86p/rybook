@@ -57,6 +57,17 @@ def profile(user_id):
 		s.comments = Comments.select().where(Comments.item_id == s.id)
 		for c in s.comments:
 			c.type_id = constants.types['comment']
+			try:
+				likes = Likes.select().where((Likes.item_id == c.id) & (Likes.type_id == c.type_id))
+				likers_on_comments = []
+				for like in likes:
+					person = User.select().where(User.id == like.user.id).get()
+					likers_on_comments.append(person.f_Name)
+				c.likes = len(likers_on_comments)
+				c.likers = likers_on_comments
+				print  c.likes, "Likes on Comments"
+			except:
+				print "No Likes on Comments", sys.exc_info()[0]
 
 
 	request_names = getPendingRequests(user_id)
@@ -171,8 +182,8 @@ def writeStatus():
 
 @app.route('/like', methods = ['POST'])
 def like():
-	print request.form["itemId"], "Requst form"
-	current_status = Status.get(Status.id == request.form["itemId"])
+	# print request.form["itemId"], "Requst form"
+	# current_status = Status.get(Status.id == request.form["itemId"])
 	try:
 		status = 0
 		like = Likes.select().where((Likes.user == session['id']) & (Likes.item_id == request.form["itemId"]) & (Likes.type_id == request.form["typeId"])).get()
@@ -194,7 +205,7 @@ def comment():
 	c = Comments.create(user = session['id'], item_id = request.form['itemId'], type_id = type_id, comment = request.form['comment'])
 	c.save()
 	comment_macro = get_template_attribute('macros/comment.html', 'comment')
-	html = comment_macro(c)
+	html = comment_macro(c, session['id'])
 	return jsonify(html = html)
 
 
