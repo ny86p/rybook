@@ -80,7 +80,7 @@
 			.commentSection
 				|{%from 'macros/comment.html' import comment%}
 					{%for c in s.comments%}
-					{{comment(c)}}
+					{{comment(c, viewer)}}
 					{%endfor%}
 					
 	|{%endfor%}

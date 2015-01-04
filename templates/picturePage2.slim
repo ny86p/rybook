@@ -24,7 +24,7 @@
 	.picComments
 		|{%from 'macros/comment.html' import comment%}
 			{%for c in pic_info.comments%}
-			{{comment(c)}}
+			{{comment(c, viewer)}}
 			{%endfor%}
 
 

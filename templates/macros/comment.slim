@@ -1,9 +1,19 @@
-|{% macro comment(comment) -%}
+|{% macro comment(comment,person) -%}
 .comment
-	.commentRightSide
+	.commentLeftSide
 		img src="{{url_for('static', filename = 'images/' + comment.user.profile_photo)}}" class="commentPic"
 		span class="cName" {{comment.user.f_Name}} {{comment.user.l_Name}}
-	.commentLeftSide
-		span class="cText" {{comment.comment}}
+	.commentRightSide
+		form data-type-id="{{comment.type_id}}" data-id="{{comment.id}}" class='likeComment'
+			|{%if person.f_Name in comment.likers%}
+			button class="btn btn-xs unlike" type="submit" unlike
+			button class="btn btn-xs like" type="submit"  style="display: none" like
+			|{%else%} 
+			button class="btn btn-xs like" type="submit" like
+			button class="btn btn-xs unlike" type="submit"  style="display: none" unlike
+			|{%endif%}
+		span class="cText" {{comment.comment}}	
+		.commentLikesCount
+			|{{comment.likes}}
 |{%- endmacro %}
 
