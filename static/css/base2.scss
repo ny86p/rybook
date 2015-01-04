@@ -6,6 +6,17 @@
 body{
 	background-image: url('/static/images/pattern29.png');
 }
+form.like{
+	button{
+		background: transparent;
+		font-size: 17px;
+		color: white;
+		&:hover{
+			color: white;
+		}
+	}
+}			
+
 .content{
 	width: 80%;
 	padding: 20px 50px;

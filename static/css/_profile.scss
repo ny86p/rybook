@@ -7,7 +7,6 @@
 			margin-left: 22%;
 		}
 		.statuses{
-			text-align: center;
 			margin-right: auto;
 			margin-left: auto;
 			margin-bottom: 15px;
@@ -21,6 +20,7 @@
 					float: left;
 					width: 100%;
 					background: white;
+					padding: 5px;
 					.leftpart{
 						width: 20%;
 						float: left;
@@ -61,6 +61,7 @@
 					color: white;
 					background: #ED145B;
 					text-align: left;
+					padding: 5px;
 					.writeComment{
 						float: right;
 						margin: 0 auto;
@@ -92,39 +93,45 @@
 
 				.commentSection{
 					width: 100%;
-					float: left;
 					background-color: lightpink;
-
+					float: left;
 					.comment{
-						height: 50px;
 						border: 1px solid #ED145B;
-						.commentLeftSide{
-							float: left;
-							width: 40%;
-							.commentPic{
-								float: left;
-								height: 20px;
-						}
-							.cName{
-								float: left;
+						padding: 5px;
+						.commentTop{
+							margin-bottom: 5px;
+							.commentLeftSide{
+								width: 40%;
+								display: inline-block;
+								.commentPic{
+									display: inline-block;	
+									height: 20px;
+									margin-right: 5px;
+								}
+								.cName{
+									display: inline-block;
+								}
 							}
+					 		.commentRightside{
+								width: 60%;
+								display: inline-block;
+								
+								.cText{
+									display: inline-block;
+								}
 
+							}
 						}
-				 		.commentRightside{
-							width: 60%;
-							float: left;
+						.commentBottom{
 							.likeComment{
-								float: right;
+								display: inline-block;
+								margin: 0;
 							}
-							.cText{
-								float: left;
+							.commentLikesCount{
+								margin: 0 5px;
 							}
-
 						}
-						
-
-				}
-
+					}	
 				}
 			}
 		}

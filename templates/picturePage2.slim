@@ -4,13 +4,13 @@
 	img class="centralPhoto" src="{{url_for('static', filename = 'images/' + pic_info.filename)}}"
 	.picFeedback
 		
-		form data-type-id="{{pic_info.type_id}}" data-id="{{pic_info.id}}" class='likePicture'
+		form data-type-id="{{pic_info.type_id}}" data-id="{{pic_info.id}}" class='like likePicture'
 			|{%if viewer.f_Name in pic_info.likers%}
-			button class="btn btn-xs unlike" type="submit" unlike
-			button class="btn btn-xs like" type="submit"  style="display: none" like
+			button class="btn btn-xs  glyphicon glyphicon-thumbs-down unlike" type="submit"
+			button class="btn btn-xs  glyphicon glyphicon-thumbs-up like" type="submit"  style="display: none"
 			|{%else%} 
-			button class="btn btn-xs like" type="submit" like
-			button class="btn btn-xs unlike" type="submit"  style="display: none" unlike
+			button class="btn btn-xs glyphicon glyphicon-thumbs-up like" type="submit" 
+			button class="btn btn-xs glyphicon glyphicon-thumbs-down unlike" type="submit"  style="display: none" 
 			|{%endif%}
 
 		.picLikeCount

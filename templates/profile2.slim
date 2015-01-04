@@ -58,19 +58,18 @@
 					.middle
 						| {{s.status}}
 			.bottom
-				form data-type-id="{{s.type_id}}" data-id="{{s.id}}" class='likeStatus'
+				form data-type-id="{{s.type_id}}" data-id="{{s.id}}" class='like likeStatus'
 					|{%if viewer.f_Name in s.likers%}
-					button class="btn btn-xs unlike" type="submit" unlike
-					button class="btn btn-xs like" type="submit"  style="display: none" like
+					button class="btn btn-xs  glyphicon glyphicon-thumbs-down unlike" type="submit"
+					button class="btn btn-xs  glyphicon glyphicon-thumbs-up like" type="submit"  style="display: none"
 					|{%else%} 
-					button class="btn btn-xs like" type="submit" like
-					button class="btn btn-xs unlike" type="submit"  style="display: none" unlike
+					button class="btn btn-xs glyphicon glyphicon-thumbs-up like" type="submit" 
+					button class="btn btn-xs glyphicon glyphicon-thumbs-down unlike" type="submit"  style="display: none" 
 					|{%endif%}
 
 
 				.likesCount
 					| {{s.likes}}
-				span class="glyphicon glyphicon-thumbs-up"
 
 				form data-id="{{s.id}}" action="{{url_for('comment')}}" method='post' class="writeComment"
 					div class="input-group"
