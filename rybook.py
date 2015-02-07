@@ -53,18 +53,19 @@ def profile(user_id):
 			print s.likes, "Likes on status", likers
 		except:
 		 	print "No Likes", sys.exc_info()[0]
-		Comments.select().order_by(Comments.date_created.desc)
 		s.comments = Comments.select().where(Comments.item_id == s.id)
 		for c in s.comments:
 			c.type_id = constants.types['comment']
 			try:
-				likes = Likes.select().where((Likes.item_id == c.id) & (Likes.type_id == c.type_id))
-				likers_on_comments = []
+				likes = list(Likes.select().where((Likes.item_id == c.id) & (Likes.type_id == c.type_id)))
+				print likes, "list of likes"
+				c.likes = len(likes)
+				c.likers = likes
+				c.you_like = False
 				for like in likes:
-					person = User.select().where(User.id == like.user.id).get()
-					likers_on_comments.append(person.f_Name)
-				c.likes = len(likers_on_comments)
-				c.likers = likers_on_comments
+					if session['id'] == like.user.id:
+						c.you_like = True
+
 				print  c.likes, "Likes on Comments"
 			except:
 				print "No Likes on Comments", sys.exc_info()[0]
@@ -75,6 +76,11 @@ def profile(user_id):
 
 	friends = getAcceptedFrienships(user_id)
 	friends.extend(getReqFriendships(user_id))
+	friendsCount = len(friends)
+	friendInfo = []
+	for f in friends:
+		personInfo = User.get(User.f_Name == f)
+		friendInfo.append(personInfo)
 	print friends, "friends"
 	try:
 		Message.select().order_by(Message.id.desc())
@@ -86,7 +92,7 @@ def profile(user_id):
 	viewerFriends = getAcceptedFrienships(session['id'])
 	viewerFriends.extend(getReqFriendships(session['id']))
 	mutualFriends = [f for f in viewerFriends if f in friends]
-	return render_template("profile2.html",current_user = current_user, request_names = request_names, viewer = viewer, message = message, status = status,friends=friends, mutualFriends = mutualFriends)
+	return render_template("profile2.html",current_user = current_user, request_names = request_names, viewer = viewer, message = message, status = status,friends=friends, mutualFriends = mutualFriends, friendsCount = friendsCount, friendInfo = friendInfo)
 
 @app.route('/')
 def index():

@@ -13,6 +13,8 @@
 				{{friend}}
 			{%endfor%}
 		|{%endif%}
+		br 
+		| {{ friendsCount }} Friends
 		br
 		|{%if not current_user.owner%}
 			Mutual Friends
@@ -71,6 +73,14 @@
 				.likesCount
 					| {{s.likes}}
 
+				| {% if s.likes == 1 %}
+					{%if viewer.f_Name in s.likers%}
+						span you like this
+					{%endif%}
+				| {% endif %}
+				
+
+				span others like this
 				form data-id="{{s.id}}" action="{{url_for('comment')}}" method='post' class="writeComment"
 					div class="input-group"
 						input type="text" name="comment" class="commentBar" placeholder='comment'
@@ -79,7 +89,7 @@
 			.commentSection
 				|{%from 'macros/comment.html' import comment%}
 					{%for c in s.comments%}
-					{{comment(c, viewer)}}
+					{{comment(c)}}
 					{%endfor%}
 					
 	|{%endfor%}
