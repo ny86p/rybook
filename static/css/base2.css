@@ -150,10 +150,8 @@
           float: left;
           width: 30%;
           height: 1%; }
-          .content .right .statuses .status .bottom .likeStatus .likeButton {
-            background: #ED145B; }
-            .content .right .statuses .status .bottom .likeStatus .likeButton:hover {
-              text-decoration: underline; }
+          .content .right .statuses .status .bottom .likeStatus .unlike {
+            color: green; }
         .content .right .statuses .status .bottom .likesCount {
           float: left; }
       .content .right .statuses .status .commentSection {
@@ -182,6 +180,8 @@
           .content .right .statuses .status .commentSection .comment .commentBottom .likeComment {
             display: inline-block;
             margin: 0; }
+            .content .right .statuses .status .commentSection .comment .commentBottom .likeComment .unlike {
+              color: green; }
           .content .right .statuses .status .commentSection .comment .commentBottom .commentLikesCount {
             margin: 0 5px; }
 .content .left {

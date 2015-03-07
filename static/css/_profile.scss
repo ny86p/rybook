@@ -76,11 +76,8 @@
 						float: left;
 						width: 30%;
 						height: 1%;
-						.likeButton{
-							background: #ED145B;
-							&:hover{
-								text-decoration: underline;
-							}
+						.unlike{
+							color: green;
 						}
 					}
 					.likesCount{
@@ -126,6 +123,9 @@
 							.likeComment{
 								display: inline-block;
 								margin: 0;
+								.unlike{
+									color: green;
+								}
 							}
 							.commentLikesCount{
 								margin: 0 5px;

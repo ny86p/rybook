@@ -62,11 +62,11 @@
 			.bottom
 				form data-type-id="{{s.type_id}}" data-id="{{s.id}}" class='like likeStatus'
 					|{%if viewer.f_Name in s.likers%}
-					button class="btn btn-xs  glyphicon glyphicon-thumbs-down unlike" type="submit"
+					button class="btn btn-xs  glyphicon glyphicon-thumbs-up unlike" type="submit"
 					button class="btn btn-xs  glyphicon glyphicon-thumbs-up like" type="submit"  style="display: none"
 					|{%else%} 
 					button class="btn btn-xs glyphicon glyphicon-thumbs-up like" type="submit" 
-					button class="btn btn-xs glyphicon glyphicon-thumbs-down unlike" type="submit"  style="display: none" 
+					button class="btn btn-xs glyphicon glyphicon-thumbs-up unlike" type="submit"  style="display: none" 
 					|{%endif%}
 
 
