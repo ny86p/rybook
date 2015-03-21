@@ -14,27 +14,6 @@ def getPendingRequests(user_id):
 	except:
 		return []
 
-
-def getReqFriendships(user_id):
-	friends = []
-	try:
-		for friendship in Friendship.select().where((Friendship.friend_user_id == user_id) & (Friendship.accepted == 1)):
-			friend = User.get(User.id == friendship.user_id)
-			friends.append(friend.f_Name)
-		return friends
-	except:
-		return friends
-
-def getAcceptedFrienships(user_id):
-	friends = []
-	try:
-		for f in Friendship.select().where((Friendship.user_id == user_id) & (Friendship.accepted == 1)):
-			friend = User.get(User.id == f.friend_user_id)
-			friends.append(friend.f_Name)
-		return friends
-	except:
-		return friends
-
 def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
