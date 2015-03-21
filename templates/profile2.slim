@@ -8,9 +8,9 @@
 		| Email: {{current_user.email}}
 		br
 		| Friends:
-		|{%if friends%}
-			{%for friend in friends%}
-				{{friend}}
+		|{%if page_owner_friends%}
+			{%for friend in page_owner_friends%}
+				{{friend.f_Name}}
 			{%endfor%}
 		|{%endif%}
 		br 
@@ -18,9 +18,9 @@
 		br
 		|{%if not current_user.owner%}
 			Mutual Friends
-			{%if mutualFriends%}
-				{%for friend in mutualFriends%}
-					{{friend}}
+			{%if mutual_friends%}
+				{%for friend in mutual_friends%}
+					{{friend.f_Name}}
 				{%endfor%}
 			{%endif%}
 		|{%endif%}
@@ -72,15 +72,8 @@
 
 				.likesCount
 					| {{s.likes}}
+				span class="likesMessage"
 
-				| {% if s.likes == 1 %}
-					{%if viewer.f_Name in s.likers%}
-						span you like this
-					{%endif%}
-				| {% endif %}
-				
-
-				span others like this
 				form data-id="{{s.id}}" action="{{url_for('comment')}}" method='post' class="writeComment"
 					div class="input-group"
 						input type="text" name="comment" class="commentBar" placeholder='comment'

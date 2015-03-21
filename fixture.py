@@ -10,7 +10,7 @@ from picture import *
 
 User.drop_table(True)
 User.create_table()
-for i in range(7):
+for i in range(1,7):
 	p = User.create(bday = date(2013,6,22), password = 'p' + str(i),f_Name = 'user' + str(i), l_Name = 'last' + str(i), email = 'e' + str(i),)
 	p.save()
 

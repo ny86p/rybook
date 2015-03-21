@@ -29,9 +29,12 @@ class UserHelper():
             for friendship in Friendship.select().where( ((Friendship.friend_user_id == self.id) | (Friendship.user_id == self.id)) & (Friendship.accepted == 1)):
                 # we want the id of the friend, not of user_id
                 if friendship.user_id == self.id:
-                    friends.append(friendship.friend_user_id)
+                    friend_id = friendship.friend_user_id
                 else:
-                    friends.append(friendship.user_id)
+                    friend_id = friendship.user_id
+                    
+                friend = User.get(User.id == friend_id)
+                friends.append(friend)
 
         except:
             friends = []

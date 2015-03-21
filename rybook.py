@@ -38,21 +38,18 @@ def profile(user_id):
 		s.type_id = constants.types['status']
 		if s.date_created:
 			s.date_created = datetime.strftime(s.date_created, '%m/%d/%Y %I:%M%p')
-		try:
-			likes = Likes.select().where((Likes.item_id == s.id) & (Likes.type_id == s.type_id))
-			print s.id, "Status id"
-			# print len(likes), "Number of Likes"
-			# likes =  User.likes.select().where(Likes)
-			likers= []
-			for like in likes:
-				person = User.select().where(User.id == like.user.id).get()
-				likers.append(person.f_Name)
-				print " IN loop"
-			s.likes = len(likers)
-			s.likers = likers
-			print s.likes, "Likes on status", likers
-		except:
-		 	print "No Likes", sys.exc_info()[0]
+		# try:
+		# 	likes = list(Likes.select().where((Likes.item_id == s.id) & (Likes.type_id == s.type_id)))
+		# 	# print s.id, "Status id"
+		# 	s.like_message = str(len(likes)) + "others like this"
+		# 	for like in likes:
+		# 		if session['id'] == like.user.id:
+		# 			s.like_message = "you and " + str(len(likes) - 1) + " others like this"
+			
+		# 	s.likes = len(likes)
+		# 	print s.likes, "Likes on status", likers
+		# except:
+		#  	print "No Likes", sys.exc_info()[0]
 		s.comments = Comments.select().where(Comments.item_id == s.id)
 		for c in s.comments:
 			c.type_id = constants.types['comment']
@@ -74,14 +71,9 @@ def profile(user_id):
 	request_names = getPendingRequests(user_id)
 	print"Requests: ", request_names
 
-	friends = getAcceptedFrienships(user_id)
-	friends.extend(getReqFriendships(user_id))
-	friendsCount = len(friends)
-	friendInfo = []
-	for f in friends:
-		personInfo = User.get(User.f_Name == f)
-		friendInfo.append(personInfo)
-	print friends, "friends"
+	page_owner = UserHelper(user_id)
+	page_owner_friends = page_owner.get_friends()
+
 	try:
 		Message.select().order_by(Message.id.desc())
 		message = [m for m in Message.select().where(Message.recipient_id == user_id)]
@@ -89,10 +81,26 @@ def profile(user_id):
 	except:
 		message = []
 
-	viewerFriends = getAcceptedFrienships(session['id'])
-	viewerFriends.extend(getReqFriendships(session['id']))
-	mutualFriends = [f for f in viewerFriends if f in friends]
-	return render_template("profile2.html",current_user = current_user, request_names = request_names, viewer = viewer, message = message, status = status,friends=friends, mutualFriends = mutualFriends, friendsCount = friendsCount, friendInfo = friendInfo)
+	session_user = UserHelper(session['id'])
+	session_user_friends = session_user.get_friends()
+
+	mutual_friends = []
+	for session_friend in session_user_friends:
+		for owner_friend in page_owner_friends:
+			if session_friend.id == owner_friend.id:
+				mutual_friends.append(session_friend)
+
+	template_data = {
+		"current_user": current_user,
+		"request_names": request_names,
+		"viewer": viewer,
+		"message": message,
+		"status": status,
+		"page_owner_friends": page_owner_friends,
+		"mutual_friends": mutual_friends,
+		"friendsCount": len(page_owner_friends)
+	}
+	return render_template("profile2.html", **template_data)
 
 @app.route('/')
 def index():
@@ -188,18 +196,29 @@ def writeStatus():
 
 @app.route('/like', methods = ['POST'])
 def like():
-	# print request.form["itemId"], "Requst form"
-	# current_status = Status.get(Status.id == request.form["itemId"])
+	session_user = UserHelper(session['id'])
+	session_user_friends = session_user.get_friends()
+	try:
+		for like in Likes.select().where((Likes.item_id == request.form["itemId"]) & (Likes.type_id == request.form["typeId"])).get():
+			for friend in session_user_friends:
+				if like.user.id == friend.id:
+					friend_likers.append(friend)
+
+	except:
+		friend_likers = []
+	
 	try:
 		status = 0
-		like = Likes.select().where((Likes.user == session['id']) & (Likes.item_id == request.form["itemId"]) & (Likes.type_id == request.form["typeId"])).get()
-		like.delete_instance()
-		like.save()
+		user_like = Likes.select().where((Likes.user == session['id']) & (Likes.item_id == request.form["itemId"]) & (Likes.type_id == request.form["typeId"])).get()
+		user_like.delete_instance()
+		user_like.save()
+		# see if friends like it 
 	except:
 		status = 1
 		like = Likes.create(user = session['id'], item_id = request.form["itemId"], type_id = request.form["typeId"])
 		like.save()
-	return jsonify(like = status) #0 for unlike 1 for a like
+
+	return jsonify({'like': status, 'friend_likers': friend_likers}) #0 for unlike 1 for a like
 
 @app.route('/comment', methods = ['POST'])
 def comment():
@@ -213,8 +232,6 @@ def comment():
 	comment_macro = get_template_attribute('macros/comment.html', 'comment')
 	html = comment_macro(c, session['id'])
 	return jsonify(html = html)
-
-
 
 @app.route('/sendMessage/<user_id>', methods = ['POST'])
 def sendMessage(user_id):
