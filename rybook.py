@@ -196,29 +196,55 @@ def writeStatus():
 
 @app.route('/like', methods = ['POST'])
 def like():
-	session_user = UserHelper(session['id'])
-	session_user_friends = session_user.get_friends()
+	session_user_friends = UserHelper(session['id']).get_friends()
 	try:
-		for like in Likes.select().where((Likes.item_id == request.form["itemId"]) & (Likes.type_id == request.form["typeId"])).get():
+		status_likes = Likes.select().where((Likes.item_id == request.form["itemId"]) & (Likes.type_id == request.form["typeId"])).get()
+		num_likes_on_status = len(status_likes)
+		for like in status_likes:
 			for friend in session_user_friends:
 				if like.user.id == friend.id:
 					friend_likers.append(friend)
 
 	except:
+		status_likes = []
+		num_likes_on_status = 0
 		friend_likers = []
-	
 	try:
 		status = 0
 		user_like = Likes.select().where((Likes.user == session['id']) & (Likes.item_id == request.form["itemId"]) & (Likes.type_id == request.form["typeId"])).get()
 		user_like.delete_instance()
 		user_like.save()
-		# see if friends like it 
+		if( friend_likers ):
+			if( len(friend_likers) >= 2):
+				message = str(friend_likers[0]) + "," + str(friend_likers[1]) + " and " + str(num_likes_on_status - 2) + " others like this" 
+			else:
+				message = str(friend_likers[0]) + " and " + str(num_likes_on_status - 2) + " others like this" 
+		if not num_likes_on_status:
+			message = "No likes"
+		elif num_likes_on_status == 1:
+			message = "One other likes this"
+		else:
+			message = num_likes_on_status + "others like this"
+
+
 	except:
 		status = 1
 		like = Likes.create(user = session['id'], item_id = request.form["itemId"], type_id = request.form["typeId"])
 		like.save()
+		if( friend_likers ):
+			if( len(friend_likers) >= 2):
+				message = "You, " + str(friend_likers[0]) + "," + str(friend_likers[1]) + " and " + str(num_likes_on_status - 2) + " others like this" 
+			else:
+				message = "You, " +str(friend_likers[0]) + " and " + str(num_likes_on_status- 2) + " others like this" 
+		if num_likes_on_status == 1:
+			message = "You like this"
+		elif num_likes_on_status == 2:
+			message = "You and one other likes this"
+		else:
+			message = "You and " + str(num_likes_on_status) + " others like this"
 
-	return jsonify({'like': status, 'friend_likers': friend_likers}) #0 for unlike 1 for a like
+
+	return jsonify({'like': status, 'message': message}) #0 for unlike 1 for a like
 
 @app.route('/comment', methods = ['POST'])
 def comment():

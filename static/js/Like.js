@@ -13,7 +13,6 @@ function Like(){
 		var data = {};
 		data.itemId = $form.data('id');
 		data.typeId = $form.data("type-id");
-		debugger
 		$.ajax({
 			type: "post",
 			url: "/like",
@@ -23,11 +22,6 @@ function Like(){
 					$like.show();
 					$unlike.hide();
 					likesCount--;
-					debugger
-					if(likesCount > 0)
-						message = response.friend_likers + "and " +  likesCount + "others like this"
-					else
-						message = "No Likes";
 
 				}
 				else{
@@ -35,20 +29,12 @@ function Like(){
 					$like.hide();
 					likesCount++;
 
-					if(likesCount == 0)
-						message = "No Likes";
-					else if(likesCount == 1)
-						message = "you  like this";
-					else if(likesCount == 2)
-						message = "you and 1 other like this";
-					else
-						message = "you and " + (likesCount - 1) + "others like this";
 				}
 
 
 
 				$likesCount.text(likesCount);
-				$likesMessage.text(message);
+				$likesMessage.text(response.message);
 			}
 		});
 
