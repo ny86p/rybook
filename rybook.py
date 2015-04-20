@@ -32,26 +32,17 @@ def profile(user_id):
 	# check if the person viewing page is the owner
 	current_user.owner = str(user_id) == str(session['id'])
 
-	status= getStatuses(user_id)
+	statuses= getStatuses(user_id)
 	commenters = []
-	for s in status:
+	for s in statuses:
 		s.type_id = constants.types['status']
+		s.like_message = "Likes on status"
 		if s.date_created:
 			s.date_created = datetime.strftime(s.date_created, '%m/%d/%Y %I:%M%p')
-		# try:
-		# 	likes = list(Likes.select().where((Likes.item_id == s.id) & (Likes.type_id == s.type_id)))
-		# 	# print s.id, "Status id"
-		# 	s.like_message = str(len(likes)) + "others like this"
-		# 	for like in likes:
-		# 		if session['id'] == like.user.id:
-		# 			s.like_message = "you and " + str(len(likes) - 1) + " others like this"
-			
-		# 	s.likes = len(likes)
-		# 	print s.likes, "Likes on status", likers
-		# except:
-		#  	print "No Likes", sys.exc_info()[0]
+
 		s.comments = Comments.select().where(Comments.item_id == s.id)
 		for c in s.comments:
+			c.like_message = "Likes on comment"
 			c.type_id = constants.types['comment']
 			try:
 				likes = list(Likes.select().where((Likes.item_id == c.id) & (Likes.type_id == c.type_id)))
@@ -95,7 +86,7 @@ def profile(user_id):
 		"request_names": request_names,
 		"viewer": viewer,
 		"message": message,
-		"status": status,
+		"statuses": statuses,
 		"page_owner_friends": page_owner_friends,
 		"mutual_friends": mutual_friends,
 		"friendsCount": len(page_owner_friends)
@@ -196,70 +187,75 @@ def writeStatus():
 
 @app.route('/like', methods = ['POST'])
 def like():
-	session_user_friends = UserHelper(session['id']).get_friends()
-	try:
-		status_likes = Likes.select().where((Likes.item_id == request.form["itemId"]) & (Likes.type_id == request.form["typeId"])).get()
-		num_likes_on_status = len(status_likes)
-		for like in status_likes:
-			for friend in session_user_friends:
-				if like.user.id == friend.id:
-					friend_likers.append(friend)
-		non_friend_likes = num_likes_on_status - len(friend_likers)
-		if non_friend_likes == 1: 
-			non_friend_message = "1 other likes this"
-		elif non_friend_likes > 1:
-			non_friend_message = str(non_friend_message) + " others like this"
-		else:
-			non_friend_message = ""
-
-	except:
-		status_likes = []
-		num_likes_on_status = 0
-		non_friend_likes = 0 
-		non_friend_message = ""
-		friend_likers = []
 	try:
 		status = 0
 		user_like = Likes.select().where((Likes.user == session['id']) & (Likes.item_id == request.form["itemId"]) & (Likes.type_id == request.form["typeId"])).get()
 		user_like.delete_instance()
 		user_like.save()
-		if( friend_likers ):
-			if( len(friend_likers) >= 2):
-				if non_friend_likes > 0:
-					message = str(friend_likers[0]) + "," + str(friend_likers[1]) + " and " + non_friend_message
-				else:
-					message = str(friend_likers[0]) + "," + str(friend_likers[1]) + " like this"
-			else:
-				if non_friend_likes > 0:
-					message = str(friend_likers[0]) + " and " + non_friend_message
-				else:
-					message = str(friend_likers[0]) + " likes this"
-		else:
-			if non_friend_likes == 0:
-				message = "No likes"
-			else:
-				message = non_friend_message
+
 	except:
 		status = 1
 		like = Likes.create(user = session['id'], item_id = request.form["itemId"], type_id = request.form["typeId"])
 		like.save()
-		if( friend_likers ):
-			if( len(friend_likers) >= 2):
-				if non_friend_likes > 0:
-					message = "You " +str(friend_likers[0]) + "," + str(friend_likers[1]) + " and " + non_friend_message
-				else:
-					message = "You " + str(friend_likers[0]) + "," + str(friend_likers[1]) + " like this"
-			else:
-				if non_friend_likes > 0:
-					message = "You "  + str(friend_likers[0]) + " and " + non_friend_message
-				else:
-					message = "You " + str(friend_likers[0]) + " likes this"
-		else:
-			if non_friend_likes == 0:
-				message = "You like this"
-			else:
-				message = "You and " + non_friend_message
 
+	session_user_friends = UserHelper(session['id']).get_friends()
+	friend_likers = []
+
+	try:
+		item_likes = Likes.select().where((Likes.item_id == request.form["itemId"]) & (Likes.type_id == request.form["typeId"])).get()
+		try:
+			item_likes = list(item_likes)
+		except:
+			item_likes = [item_likes]
+	except:
+		item_likes = []
+
+	num_likes_on_item = len(list(item_likes))
+	you_liked = False
+	non_friend_message = ""
+	# TODO: Get all user_ids from item_likes 
+	# if friend.id in item_user_ids then append
+
+	# Checking if a friend of the current  user likes this particular item
+	for like in item_likes:
+		for friend in session_user_friends:
+			if like.user.id == friend.id:
+				friend_likers.append(friend)
+			if int(session["id"]) == int(like.user.id):
+				you_liked = True
+
+	non_friend_likes = num_likes_on_item - len(friend_likers)
+	if non_friend_likes == 1: 
+		non_friend_message = "1 other likes this"
+	elif non_friend_likes > 1:
+		non_friend_message = str(non_friend_likes) + " others like this"
+
+	if num_likes_on_item == 0:
+		message = "No likes"
+	elif num_likes_on_item == 1 and you_liked:
+		message = "You like this"
+	else:
+		message = non_friend_message
+
+	if( friend_likers ):
+		first_friend_first_name = friend_likers[0].f_Name
+		if( len(friend_likers) > 1):
+			second_friend_first_name = friend_likers[1].f_Name
+			if non_friend_likes > 0:
+				message = first_friend_first_name + "," + second_friend_first_name + " and " + non_friend_message
+			else:
+				message = first_friend_first_name + "," + second_friend_first_name + " like this"
+			if you_liked:
+				message = "You, " + message
+		else:
+			if non_friend_likes > 0:
+				message = first_friend_first_name + " and " + non_friend_message
+				if you_liked:
+					message = "You, " + message 
+			else:
+				message = first_friend_first_name + " likes this"
+				if you_liked:
+					message = "You and " + first_friend_first_name + "like this"
 
 	return jsonify({'like': status, 'message': message}) #0 for unlike 1 for a like
 

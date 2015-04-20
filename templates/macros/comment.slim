@@ -15,9 +15,8 @@
 			button class="btn btn-xs glyphicon glyphicon-thumbs-up like" type="submit" 
 			button class="btn btn-xs glyphicon glyphicon-thumbs-up unlike" type="submit"  style="display: none" 
 			|{%endif%}
-		span.commentLikesCount
-			|{{comment.likes}}
 		span.likesMessage
+			| {{comment.like_message}}
 			
 |{%- endmacro %}
 

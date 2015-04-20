@@ -47,7 +47,7 @@
 				button class="btn btn-default" type="submit" Post
 
 	|{%endif%}
-	|{%for s in status%}
+	|{%for s in statuses%}
 	.statuses
 		.status
 			.top
@@ -69,10 +69,8 @@
 					button class="btn btn-xs glyphicon glyphicon-thumbs-up unlike" type="submit"  style="display: none" 
 					|{%endif%}
 
-
-				.likesCount
-					| {{s.likes}}
 				span class="likesMessage"
+					| {{s.like_message}}
 				form data-id="{{s.id}}" action="{{url_for('comment')}}" method='post' class="writeComment"
 					div class="input-group"
 						input type="text" name="comment" class="commentBar" placeholder='comment'

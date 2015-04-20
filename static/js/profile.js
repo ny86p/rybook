@@ -20,7 +20,6 @@ $(".commentBar").keydown(function(e){
 
 $("form.likeStatus button").click(function(e){
 	var like = new window.Like();
-	like.likesCountSelector = ".likesCount";
 	like.clickedElement = this;
 	like.save();
 	e.preventDefault();
@@ -29,7 +28,6 @@ $("form.likeStatus button").click(function(e){
 
 $("form.likeComment button").click(function(e){
 	var like = new window.Like();
-	like.likesCountSelector = ".commentLikesCount";
 	like.clickedElement = this;
 	like.save();
 	e.preventDefault();
