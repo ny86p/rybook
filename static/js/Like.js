@@ -30,9 +30,6 @@ function Like(){
 					likesCount++;
 
 				}
-
-
-
 				$likesCount.text(likesCount);
 				$likesMessage.text(response.message);
 			}

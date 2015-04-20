@@ -204,10 +204,19 @@ def like():
 			for friend in session_user_friends:
 				if like.user.id == friend.id:
 					friend_likers.append(friend)
+		non_friend_likes = num_likes_on_status - len(friend_likers)
+		if non_friend_likes == 1: 
+			non_friend_message = "1 other likes this"
+		elif non_friend_likes > 1:
+			non_friend_message = str(non_friend_message) + " others like this"
+		else:
+			non_friend_message = ""
 
 	except:
 		status_likes = []
 		num_likes_on_status = 0
+		non_friend_likes = 0 
+		non_friend_message = ""
 		friend_likers = []
 	try:
 		status = 0
@@ -216,32 +225,40 @@ def like():
 		user_like.save()
 		if( friend_likers ):
 			if( len(friend_likers) >= 2):
-				message = str(friend_likers[0]) + "," + str(friend_likers[1]) + " and " + str(num_likes_on_status - 2) + " others like this" 
+				if non_friend_likes > 0:
+					message = str(friend_likers[0]) + "," + str(friend_likers[1]) + " and " + non_friend_message
+				else:
+					message = str(friend_likers[0]) + "," + str(friend_likers[1]) + " like this"
 			else:
-				message = str(friend_likers[0]) + " and " + str(num_likes_on_status - 2) + " others like this" 
-		if not num_likes_on_status:
-			message = "No likes"
-		elif num_likes_on_status == 1:
-			message = "One other likes this"
+				if non_friend_likes > 0:
+					message = str(friend_likers[0]) + " and " + non_friend_message
+				else:
+					message = str(friend_likers[0]) + " likes this"
 		else:
-			message = num_likes_on_status + "others like this"
-
-
+			if non_friend_likes == 0:
+				message = "No likes"
+			else:
+				message = non_friend_message
 	except:
 		status = 1
 		like = Likes.create(user = session['id'], item_id = request.form["itemId"], type_id = request.form["typeId"])
 		like.save()
 		if( friend_likers ):
 			if( len(friend_likers) >= 2):
-				message = "You, " + str(friend_likers[0]) + "," + str(friend_likers[1]) + " and " + str(num_likes_on_status - 2) + " others like this" 
+				if non_friend_likes > 0:
+					message = "You " +str(friend_likers[0]) + "," + str(friend_likers[1]) + " and " + non_friend_message
+				else:
+					message = "You " + str(friend_likers[0]) + "," + str(friend_likers[1]) + " like this"
 			else:
-				message = "You, " +str(friend_likers[0]) + " and " + str(num_likes_on_status- 2) + " others like this" 
-		if num_likes_on_status == 1:
-			message = "You like this"
-		elif num_likes_on_status == 2:
-			message = "You and one other likes this"
+				if non_friend_likes > 0:
+					message = "You "  + str(friend_likers[0]) + " and " + non_friend_message
+				else:
+					message = "You " + str(friend_likers[0]) + " likes this"
 		else:
-			message = "You and " + str(num_likes_on_status) + " others like this"
+			if non_friend_likes == 0:
+				message = "You like this"
+			else:
+				message = "You and " + non_friend_message
 
 
 	return jsonify({'like': status, 'message': message}) #0 for unlike 1 for a like
