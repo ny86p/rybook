@@ -61,7 +61,7 @@
 						| {{s.status}}
 			.bottom
 				form data-type-id="{{s.type_id}}" data-id="{{s.id}}" class='like likeStatus'
-					|{%if viewer.f_Name in s.likers%}
+					|{%if s.is_liked_by_you%}
 					button class="btn btn-xs  glyphicon glyphicon-thumbs-up unlike" type="submit"
 					button class="btn btn-xs  glyphicon glyphicon-thumbs-up like" type="submit"  style="display: none"
 					|{%else%} 

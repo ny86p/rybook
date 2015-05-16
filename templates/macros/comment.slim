@@ -8,7 +8,7 @@
 			span class="cText" {{comment.comment}}	
 	.commentBottom	
 		form data-type-id="{{comment.type_id}}" data-id="{{comment.id}}" class='like likeComment'
-			|{%if comment.you_like%}
+			|{%if comment.is_liked_by_you%}
 			button class="btn btn-xs  glyphicon glyphicon-thumbs-up unlike" type="submit"
 			button class="btn btn-xs  glyphicon glyphicon-thumbs-up like" type="submit"  style="display: none"
 			|{%else%} 

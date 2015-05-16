@@ -9,11 +9,14 @@ from helper import *
 from statuses import *
 from messages import *
 from likes import *
+from UserHelper import *
+from LikesHelper import *
 import os
 from comments import *
 from werkzeug.utils import secure_filename
 import constants
 import sys
+
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = 'static/images'
@@ -36,27 +39,30 @@ def profile(user_id):
 	commenters = []
 	for s in statuses:
 		s.type_id = constants.types['status']
-		s.like_message = "Likes on status"
+		s.like_message = LikesHelper.getMessage(session["id"], s.id, s.type_id)
+		s.is_liked_by_you = LikesHelper.was_item_liked_by_user(session["id"], s.id, s.type_id)
 		if s.date_created:
 			s.date_created = datetime.strftime(s.date_created, '%m/%d/%Y %I:%M%p')
 
 		s.comments = Comments.select().where(Comments.item_id == s.id)
 		for c in s.comments:
-			c.like_message = "Likes on comment"
 			c.type_id = constants.types['comment']
-			try:
-				likes = list(Likes.select().where((Likes.item_id == c.id) & (Likes.type_id == c.type_id)))
-				print likes, "list of likes"
-				c.likes = len(likes)
-				c.likers = likes
-				c.you_like = False
-				for like in likes:
-					if session['id'] == like.user.id:
-						c.you_like = True
+			c.like_message = LikesHelper.getMessage(session["id"], c.id, c.type_id)
+			# try:
+			# 	likes = list(Likes.select().where((Likes.item_id == c.id) & (Likes.type_id == c.type_id)))
+			# 	print likes, "list of likes"
+			# 	c.likes = len(likes)
+			# 	c.likers = likes
+			# 	c.you_like = False
+			# 	for like in likes:
+			# 		if session['id'] == like.user.id:
+			# 			c.you_like = True
 
-				print  c.likes, "Likes on Comments"
-			except:
-				print "No Likes on Comments", sys.exc_info()[0]
+			# 	print  c.likes, "Likes on Comments"
+			# except:
+			# 	print "No Likes on Comments", sys.exc_info()[0]
+			c.is_liked_by_you = LikesHelper.was_item_liked_by_user(session["id"], c.id, c.type_id)
+
 
 
 	request_names = getPendingRequests(user_id)
@@ -198,64 +204,7 @@ def like():
 		like = Likes.create(user = session['id'], item_id = request.form["itemId"], type_id = request.form["typeId"])
 		like.save()
 
-	session_user_friends = UserHelper(session['id']).get_friends()
-	friend_likers = []
-
-	try:
-		item_likes = Likes.select().where((Likes.item_id == request.form["itemId"]) & (Likes.type_id == request.form["typeId"])).get()
-		try:
-			item_likes = list(item_likes)
-		except:
-			item_likes = [item_likes]
-	except:
-		item_likes = []
-
-	num_likes_on_item = len(list(item_likes))
-	you_liked = False
-	non_friend_message = ""
-	# TODO: Get all user_ids from item_likes 
-	# if friend.id in item_user_ids then append
-
-	# Checking if a friend of the current  user likes this particular item
-	for like in item_likes:
-		for friend in session_user_friends:
-			if like.user.id == friend.id:
-				friend_likers.append(friend)
-			if int(session["id"]) == int(like.user.id):
-				you_liked = True
-
-	non_friend_likes = num_likes_on_item - len(friend_likers)
-	if non_friend_likes == 1: 
-		non_friend_message = "1 other likes this"
-	elif non_friend_likes > 1:
-		non_friend_message = str(non_friend_likes) + " others like this"
-
-	if num_likes_on_item == 0:
-		message = "No likes"
-	elif num_likes_on_item == 1 and you_liked:
-		message = "You like this"
-	else:
-		message = non_friend_message
-
-	if( friend_likers ):
-		first_friend_first_name = friend_likers[0].f_Name
-		if( len(friend_likers) > 1):
-			second_friend_first_name = friend_likers[1].f_Name
-			if non_friend_likes > 0:
-				message = first_friend_first_name + "," + second_friend_first_name + " and " + non_friend_message
-			else:
-				message = first_friend_first_name + "," + second_friend_first_name + " like this"
-			if you_liked:
-				message = "You, " + message
-		else:
-			if non_friend_likes > 0:
-				message = first_friend_first_name + " and " + non_friend_message
-				if you_liked:
-					message = "You, " + message 
-			else:
-				message = first_friend_first_name + " likes this"
-				if you_liked:
-					message = "You and " + first_friend_first_name + "like this"
+	message = LikesHelper.getMessage(session["id"], request.form["itemId"], request.form["typeId"])
 
 	return jsonify({'like': status, 'message': message}) #0 for unlike 1 for a like
 
