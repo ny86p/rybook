@@ -13,3 +13,6 @@ class User(Model):
     # gender = CharField()
     # bio = CharField()
     # created = dateField( )
+# class Users_Albums(Model):
+#     user = ForeignKeyField(User)
+#     album = ForeignKeyField(Album)

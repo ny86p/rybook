@@ -11,6 +11,8 @@ from messages import *
 from likes import *
 from UserHelper import *
 from LikesHelper import *
+from album import *
+from users_albums import *
 import os
 from comments import *
 from werkzeug.utils import secure_filename
@@ -267,6 +269,37 @@ def goToPicture(image_name):
 	pic_info.likes = len(likers)
 	print(pic_info.comments, "Comments Not Working:")
 	return render_template('picturePage2.html', pic_info = pic_info, viewer=viewer, current_user = pic_info.user)
+
+
+@app.route('/createAlbum', methods=['POST'])
+def createAlbum():
+	a = Album.create(user_id = session['id'], name = request.form["name"])
+	a.save()
+	u = Users_Albums.create(user = session['id'], album = a.id)
+	u.save()
+	return redirect(request.referrer)
+
+@app.route('/getAlbums/<user_id>')
+def getAlbums(user_id):
+	users_albums = []
+	for a in Users_Albums.get(user = user_id):
+		users_albums.append( Album.get( a.album_id == Album.id ) )
+	return render_template("albumPage.html", albums = users_albums)
+
+# @app.route('/getPicturesFromAlbum/<album_id>')
+# def getPicturesFromAlbum(album_id):
+# 	albums_pictures = []
+# 	for item in Albums_Pictures.get(album = album_id):
+# 		album_pic = Picture.get(item.picture_id == Picture.id)
+# 		albums_pictures.append(item.filename)
+# 	return render_template('picturePage2.html', pic_info = pic_info, viewer=viewer, current_user = pic_info.user)
+
+
+@app.route('/add_picture_to_album/<image_name>', methods=['POST'])
+def add_picture_to_album(image_name):
+	a = Albums_Pictures.create(user = session['id'], name = request.form["name"])
+	a.save()
+	return redirect(request.referrer)
 
 
 @app.route('/logout')
