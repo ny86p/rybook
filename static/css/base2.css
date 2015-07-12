@@ -188,6 +188,8 @@
     margin-left: 40px; }
   .content .left .pictures {
     width: 50%; }
+    .content .left .pictures .uploadErrorMessage {
+      color: red; }
     .content .left .pictures .img {
       width: 50%; }
       .content .left .pictures .img .prophoto {

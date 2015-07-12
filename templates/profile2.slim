@@ -34,6 +34,17 @@
 					input type='hidden' name='isProfilePhoto' value='1'
 					input type='submit' value='Upload'
 		|{%endif%}
+		span class="uploadErrorMessage"
+			|{% with messages = get_flashed_messages() %}
+				{% if messages %}
+					{% for message in messages %}
+						{{ message }}
+					{% endfor %}
+				{% endif %}
+			|{% endwith %}
+
+		br
+
 		|Pictures
 		.img
 			a href="{{url_for('getPictures', user_id=current_user.id)}}"

@@ -139,7 +139,9 @@
 		}
 		.pictures{
 			width: 50%;
-
+			.uploadErrorMessage{
+				color: red;
+			}
 			.img{
 				width: 50%;
 

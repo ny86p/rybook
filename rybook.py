@@ -236,19 +236,25 @@ def sendMessage(user_id):
 
 @app.route('/upload_file', methods=['POST'])
 def upload_file():
-    file = request.files['file']
-    if file and allowed_file(file.filename):
-        filename = secure_filename(file.filename)
-        pic = Picture.create(user = session['id'], filename = filename)
-        pic.save()
-        print "Request.form", request.form
-        if int(request.form['isProfilePhoto']) == 1:
-        	print "It Works"
-	    	p = User.select().where(User.id == session['id']).get()
-	    	p.profile_photo = filename
-	    	p.save()
-        file.save(os.path.join(app.config['UPLOAD_FOLDER'],filename))
-        return redirect(request.referrer)
+	file = request.files['file']
+	if file and allowed_file(file.filename):
+		filename = secure_filename(file.filename)
+		pic = Picture.create(user = session['id'], filename = filename)
+		pic.save()
+
+		print "Request.form", request.form
+		if int(request.form['isProfilePhoto']) == 1:
+			print "It Works"
+			p = User.select().where(User.id == session['id']).get()
+			p.profile_photo = filename
+			p.save()
+			album = Album.get(Album.name == "Profile Pictures")
+			row = Albums_Pictures.create(album = album.id, picture = pic.id)
+			row.save()
+			file.save(os.path.join(app.config['UPLOAD_FOLDER'],filename))
+	else:
+		flash(u'Picture not allowed', 'error')
+	return redirect(request.referrer)
 
 @app.route('/getPictures/<user_id>')
 def getPictures(user_id):
@@ -292,6 +298,7 @@ def getPicturesFromAlbum(album_id):
 	try:
 		rows = list(Albums_Pictures.select().where(Albums_Pictures.album == album_id))
 		album = rows[0].album
+		print rows[0].picture.id, "first pic"
 		albums_pictures = [row.picture for row in rows]
 	except:
 		albums_pictures = []
