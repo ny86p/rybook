@@ -1,1 +1,1 @@
-{% extends "base2.html" %}{% block content %}{% endblock %}
+{% extends "base2.html" %}{% block content %}<div class="albums">{%for a in albums%}<a href="{{url_for('getPicturesFromAlbum', album_id=a.id)}}">{{ a.name }}<br /></a>{%endfor%}</div>{% endblock %}

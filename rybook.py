@@ -22,7 +22,7 @@ import sys
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = 'static/images'
-app.config['ALLOWED_EXTENSIONS'] = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
+app.config['ALLOWED_EXTENSIONS'] = set(['png', 'jpg', 'jpeg', 'gif'])
 
 
 def allowed_file(filename):
@@ -281,26 +281,44 @@ def createAlbum():
 
 @app.route('/getAlbums/<user_id>')
 def getAlbums(user_id):
-	users_albums = []
-	for a in Users_Albums.get(user = user_id):
-		users_albums.append( Album.get( a.album_id == Album.id ) )
+	users_albums = [row.album for row in Users_Albums.select().where(Users_Albums.user == user_id)]
+
 	return render_template("albumPage.html", albums = users_albums)
 
-# @app.route('/getPicturesFromAlbum/<album_id>')
-# def getPicturesFromAlbum(album_id):
-# 	albums_pictures = []
-# 	for item in Albums_Pictures.get(album = album_id):
-# 		album_pic = Picture.get(item.picture_id == Picture.id)
-# 		albums_pictures.append(item.filename)
-# 	return render_template('picturePage2.html', pic_info = pic_info, viewer=viewer, current_user = pic_info.user)
+@app.route('/getPicturesFromAlbum/<album_id>')
+def getPicturesFromAlbum(album_id):
+	try:
+		rows = list(Albums_Pictures.select().where(Albums_Pictures.album == album_id))
+		album = rows[0].album
+		albums_pictures = [row.picture for row in rows]
+	except:
+		albums_pictures = []
+		# Still need the name of the album
+		album = Album.get(Album.id == album_id)
 
+	return render_template('albumsPictures.html', album_pics = albums_pictures, album = album, error = session["error"])
 
-@app.route('/add_picture_to_album/<image_name>', methods=['POST'])
-def add_picture_to_album(image_name):
-	a = Albums_Pictures.create(user = session['id'], name = request.form["name"])
-	a.save()
+@app.route('/updateAlbum/<album_id>', methods=['POST'])
+def updateAlbum(album_id):
+	print request.form['action'], "Test!"
+	if request.form['action'] == "add":
+		file = request.files["file"]
+		if file and allowed_file(file.filename):
+			filename = secure_filename(file.filename)
+			pic = Picture.create(user = session["id"], filename = filename)
+			pic.save()
+			row = Albums_Pictures.create(album = album_id, picture = pic.id)
+			row.save()
+			print "Adding pic number ", pic.id,  "to album ", album_id
+		else:
+			session["error"] = "Picture not allowed"
+	elif request.form['action'] == "delete":
+		print "Deleting image", request.form["picture_id"], "from Album ", album_id
+		# Can't have duplicate picture id's so we don't need to specify the album id
+		Albums_Pictures.delete().where(Albums_Pictures.picture == request.form["picture_id"]).execute()
+		Picture.delete().where(Picture.id == request.form["picture_id"]).execute()
+
 	return redirect(request.referrer)
-
 
 @app.route('/logout')
 def logout():

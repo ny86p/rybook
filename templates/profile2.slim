@@ -38,10 +38,16 @@
 		.img
 			a href="{{url_for('getPictures', user_id=current_user.id)}}"
 				img src="{{url_for('static', filename = 'images/' + current_user.profile_photo)}}" class='prophoto'
-		
+			
 		form action="{{url_for('createAlbum')}}" method='post' class="createAlbum"
 			input type="text" name="name" class="albumName" placeholder='Album Name'
 			button.btn.btn-default.btn-sm type="submit" Create
+
+		form action="{{url_for('getAlbums', user_id=current_user.id) }}"
+			button.btn.btn-default.btn-sm type="submit" Albums
+
+
+
 
 .right
 	|{%if current_user.owner %}
