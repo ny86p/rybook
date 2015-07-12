@@ -1,0 +1,35 @@
+| {% extends "base2.html" %}
+| {% block content %}
+
+|{% if error %}
+span.error {{error}}
+|{% endif %}
+
+h1
+	| Photos in {{album.name}}
+div class="picCollage"
+
+	|{% if not album_pics %}
+	span No Pictures in this Album
+	|{% endif %}
+
+	|{%for pic in album_pics%}
+	a href="{{url_for('goToPicture', image_name= pic.filename)}}"
+		img src="{{url_for('static', filename = 'images/' + pic.filename)}}" class="userPhoto"
+	
+	.removeFromAlbum
+		form action="{{url_for('updateAlbum', album_id = album.id)}}"  method='post'
+			input type='hidden' name='action' value='delete'
+			input type='hidden' name='picture_id' value='{{pic.id}}'
+			input type="submit" value="Remove"
+
+	|{%endfor%}
+
+	.addPictureToAlbum
+		form  action="{{url_for('updateAlbum', album_id = album.id)}}"  method='post'  enctype='multipart/form-data'
+			input type='file' name='file'
+			input type='hidden' name='action' value='add'
+			input type='submit' value='Upload'
+
+
+| {% endblock %}
