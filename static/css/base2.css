@@ -252,6 +252,10 @@ h1 {
         .lower .picComments .comment .commentRightSide .cText {
           float: left; }
 
+.flashes {
+  color: red;
+  font-size: 20px; }
+
 body {
   background-image: url("/static/images/pattern29.png"); }
 

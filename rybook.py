@@ -110,6 +110,8 @@ def login():
 	try:
 		current_user = User.get(User.email == request.form['email'], User.password == request.form['password'])
 		session['id'] = current_user.id
+		# sesson['user'] = current_user
+		session['name'] = str(current_user.f_Name + current_user.l_Name)
 		return jsonify(url = '/profile/' + str(current_user.id))
 	except:
 		return 403
@@ -296,7 +298,7 @@ def getPicturesFromAlbum(album_id):
 		# Still need the name of the album
 		album = Album.get(Album.id == album_id)
 
-	return render_template('albumsPictures.html', album_pics = albums_pictures, album = album, error = session["error"])
+	return render_template('albumsPictures.html', album_pics = albums_pictures, album = album)
 
 @app.route('/updateAlbum/<album_id>', methods=['POST'])
 def updateAlbum(album_id):
@@ -311,7 +313,7 @@ def updateAlbum(album_id):
 			row.save()
 			print "Adding pic number ", pic.id,  "to album ", album_id
 		else:
-			session["error"] = "Picture not allowed"
+			flash(u'Picture not allowed', 'error')
 	elif request.form['action'] == "delete":
 		print "Deleting image", request.form["picture_id"], "from Album ", album_id
 		# Can't have duplicate picture id's so we don't need to specify the album id

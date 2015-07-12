@@ -1,9 +1,6 @@
 | {% extends "base2.html" %}
 | {% block content %}
 
-|{% if error %}
-span.error {{error}}
-|{% endif %}
 
 h1
 	| Photos in {{album.name}}
@@ -31,5 +28,13 @@ div class="picCollage"
 			input type='hidden' name='action' value='add'
 			input type='submit' value='Upload'
 
+span class="flashes"
+	|{% with messages = get_flashed_messages() %}
+		{% if messages %}
+			{% for message in messages %}
+				{{ message }}
+			{% endfor %}
+		{% endif %}
+	|{% endwith %}
 
 | {% endblock %}
