@@ -51,7 +51,7 @@ Users_Albums.drop_table(True)
 Album.create_table()
 Users_Albums.create_table()
 for i in range(1,7):
-	a = Album.create(user_id = i, name = "Profile Pictures")
+	a = Album.create(user_id = i, name = "User's Pictures")
 	a.save()
 	u = Users_Albums.create(user = i, album = i)
 	u.save()
