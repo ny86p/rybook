@@ -18,7 +18,7 @@ from comments import *
 from werkzeug.utils import secure_filename
 import constants
 import sys
-
+import md5
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = 'static/images'
@@ -110,8 +110,15 @@ def login():
 	try:
 		current_user = User.get(User.email == request.form['email'], User.password == request.form['password'])
 		session['id'] = current_user.id
-		# sesson['user'] = current_user
-		session['name'] = str(current_user.f_Name + current_user.l_Name)
+		session["user"]= {
+			"id": current_user.id,
+			"f_Name": current_user.f_Name, 
+			"l_Name": current_user.l_Name, 
+			"profile_photo": current_user.profile_photo
+		}
+		# print model_to_dict, "Model"
+		# session['user'] = model_to_dict(current_user, only= ["f_Name", "l_Name"], recurse=False)
+		#TODO: session['user']['profile_photo'] = 
 		return jsonify(url = '/profile/' + str(current_user.id))
 	except:
 		return 403
@@ -239,6 +246,11 @@ def upload_file():
 	file = request.files['file']
 	if file and allowed_file(file.filename):
 		filename = secure_filename(file.filename)
+		# Only changing filename,, not type of file
+		data_to_encrypt = str(filename).split(".")[0] + str(session["id"]) + str(datetime.now().hour)
+		filename_type = "." + str(filename).split(".")[1]
+		print md5.new(data_to_encrypt).digest(), "md5"
+		filename = str(md5.new(data_to_encrypt).digest()) + filename_type
 		pic = Picture.create(user = session['id'], filename = filename)
 		pic.save()
 
