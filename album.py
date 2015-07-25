@@ -8,6 +8,7 @@ class Album(Model):
 	user_id = IntegerField()
 	# filename of the picture
 	name = CharField()
+	isProfilePhoto = BooleanField(default=False)
 	date_created = DateTimeField(default=datetime.now)
 
 class Albums_Pictures(Model):

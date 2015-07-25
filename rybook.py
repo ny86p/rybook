@@ -1,24 +1,28 @@
+# Built-in
+import os
+import sys
+from datetime import datetime
+from shutil import copyfile
+# Third-Party
 from flask import *
+from werkzeug.utils import secure_filename
+from sendemail import *
 from peewee import *
-import sendemail
+# Custom
 from person import *
 from friend import *
 from picture import *
-from sendemail import *
 from helper import *
 from statuses import *
 from messages import *
 from likes import *
 from UserHelper import *
 from LikesHelper import *
+from PictureHelper import *
 from album import *
 from users_albums import *
-import os
 from comments import *
-from werkzeug.utils import secure_filename
 import constants
-import sys
-
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = 'static/images'
@@ -110,8 +114,15 @@ def login():
 	try:
 		current_user = User.get(User.email == request.form['email'], User.password == request.form['password'])
 		session['id'] = current_user.id
-		# sesson['user'] = current_user
-		session['name'] = str(current_user.f_Name + current_user.l_Name)
+		session["user"]= {
+			"id": current_user.id,
+			"f_Name": current_user.f_Name, 
+			"l_Name": current_user.l_Name, 
+			"profile_photo": current_user.profile_photo
+		}
+		# print model_to_dict, "Model"
+		# session['user'] = model_to_dict(current_user, only= ["f_Name", "l_Name"], recurse=False)
+		#TODO: session['user']['profile_photo'] = 
 		return jsonify(url = '/profile/' + str(current_user.id))
 	except:
 		return 403
@@ -239,7 +250,8 @@ def upload_file():
 	file = request.files['file']
 	if file and allowed_file(file.filename):
 		filename = secure_filename(file.filename)
-		pic = Picture.create(user = session['id'], filename = filename)
+		unique_filename = PictureHelper.generate_unique_filename(session["id"], filename)
+		pic = Picture.create(user = session['id'], filename = unique_filename)
 		pic.save()
 
 		print "Request.form", request.form
@@ -248,10 +260,10 @@ def upload_file():
 			p = User.select().where(User.id == session['id']).get()
 			p.profile_photo = filename
 			p.save()
-			album = Album.get(Album.name == "Profile Pictures")
+			album = UserHelper(p.id).getProfileAlbum()
 			row = Albums_Pictures.create(album = album.id, picture = pic.id)
 			row.save()
-			file.save(os.path.join(app.config['UPLOAD_FOLDER'],filename))
+			file.save(os.path.join(app.config['UPLOAD_FOLDER'],unique_filename))
 	else:
 		flash(u'Picture not allowed', 'error')
 	return redirect(request.referrer)
@@ -278,6 +290,21 @@ def goToPicture(image_name):
 	print(pic_info.comments, "Comments Not Working:")
 	return render_template('picturePage2.html', pic_info = pic_info, viewer=viewer, current_user = pic_info.user)
 
+@app.route('/makeProfilePhoto/<filename>', methods=['POST'])
+def makeProfilePhoto(filename):
+	profile_album = UserHelper(session['id']).getProfileAlbum()
+
+	unique_filename = PictureHelper.generate_unique_filename(session["id"], filename)
+	copyfile(os.path.join(app.config['UPLOAD_FOLDER'], filename), (os.path.join(app.config['UPLOAD_FOLDER'],unique_filename)))
+	profile_picture = Picture.create(user = session["id"], filename = unique_filename)
+	profile_picture.save()
+
+	current_user = User.get(User.id == session["id"])
+	current_user.profile_picture = unique_filename
+
+	new_album_pic = Albums_Pictures.create(album = profile_album.id, picture = profile_picture.id)
+	new_album_pic.save()
+	return redirect(request.referrer)
 
 @app.route('/createAlbum', methods=['POST'])
 def createAlbum():
