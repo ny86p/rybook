@@ -376,6 +376,6 @@ if __name__ == '__main__':
 	# The debug=true setting allows any changes to this file
 	# to force an automatic restart of the webserver.
 	
-	port = int(os.environ.get("PORT", 5000))
-	app.run(debug=True, port=port)
-	# app.run(debug = True)
+	# port = int(os.environ.get("PORT", 5000))
+	# app.run(debug=True, port=port)
+	app.run(debug = True)
