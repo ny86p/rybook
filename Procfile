@@ -1,1 +1,1 @@
-web: gunicorn rybook:app  --log-file=-
+web: python rybook:app  --log-file=-
