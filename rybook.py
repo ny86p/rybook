@@ -24,6 +24,7 @@ from users_albums import *
 from comments import *
 import constants
 
+
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = 'static/images'
 app.config['ALLOWED_EXTENSIONS'] = set(['png', 'jpg', 'jpeg', 'gif'])
@@ -374,4 +375,7 @@ if __name__ == '__main__':
 
 	# The debug=true setting allows any changes to this file
 	# to force an automatic restart of the webserver.
-    app.run(debug = True)
+	
+	port = int(os.environ.get("PORT", 5000))
+	app.run(debug=True, port=port)
+	# app.run(debug = True)
